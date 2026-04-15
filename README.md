@@ -51,11 +51,12 @@ Data is strictly stored using flat files with relative pathing. The system autom
 
 ## Team Members & Responsibilities
 
+## Team Members & Responsibilities
+
 | Team Member | Assigned Modules & Responsibilities |
 | :--- | :--- |
-| **Mariam Asal** | **Core Architecture & Storage:** `build.sh`, `utils.sh`, `students.sh`, `subjects.sh`. Responsible for directory initialization, input validation logic, and student/subject CRUD operations. |
-| **Mawada Alexandar** | **Grading & Reports:** `grades.sh`, `reports.sh`, `main_menu.sh`. Responsible for grade assignments, `sed`/`awk` operations for file parsing, GPA calculation matrix, and the primary user interface. |
-
+| **Mariam Asal** | [cite_start]**Main Menu, Students & Grades:** Responsible for the core application Main Menu and navigation[cite: 14, 15]. [cite_start]Handles all Student Management CRUD operations (Add, List, Update, Delete) [cite: 26, 27, 28, 29, 30] [cite_start]and enforces input validation for IDs, names, emails, and academic years [cite: 40, 42][cite_start], managing the files in `sgms_data/students/`[cite: 13]. [cite_start]Also develops the Grade Management module (Assign, Update, Delete, View) [cite: 31, 32, 33, 34, 35, 36][cite_start], validating floating-point scores [cite: 42][cite_start], mapping them to the grading scale [cite: 44][cite_start], and handling storage in `sgms_data/grades/`[cite: 13]. |
+| **Mawada Alexandar** | [cite_start]**Subjects & Reporting:** Responsible for the Subject Management module (Add, List, Update, Delete)[cite: 20, 21, 22, 23, 24]. [cite_start]Enforces validation rules for alphanumeric subject codes and credit hour integers [cite: 40, 42][cite_start], managing the files inside `sgms_data/subjects/`[cite: 13]. [cite_start]Additionally handles the Reports & Statistics module[cite: 39]. [cite_start]Uses `awk` for floating-point calculations and averages [cite: 51] [cite_start]to dynamically generate Student Transcripts with GPA, Subject Statistics, Top/Failing student reports, and the Full Grade Matrix[cite: 39]. |
 ## Validation Rules Implemented
 The system enforces strict input validation to maintain data integrity:
 * **Student ID:** Numeric only, up to 10 digits, strictly unique.
