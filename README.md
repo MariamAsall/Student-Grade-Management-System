@@ -63,6 +63,3 @@ Data is strictly stored using flat files with relative pathing. The system autom
 * Data Export: Capable of exporting generated reports to `.txt` or `.csv` files.
 * Advanced Search: Implements real-time student search via partial name matching utilizing `grep`.
 * Weighted GPA: Calculates accurate GPAs by factoring in specific subject credit hours.
-```
-
-***
