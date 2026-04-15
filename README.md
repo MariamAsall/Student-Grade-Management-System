@@ -53,18 +53,12 @@ Data is strictly stored using flat files with relative pathing. The system autom
 
 ## Team Members & Responsibilities
 
+## Team Members & Responsibilities
+
 | Team Member | Assigned Modules & Responsibilities |
 | :--- | :--- |
-| **Mariam Asal** | [cite_start]**Main Menu, Students & Grades:** Responsible for the core application Main Menu and navigation[cite: 14, 15]. [cite_start]Handles all Student Management CRUD operations (Add, List, Update, Delete) [cite: 26, 27, 28, 29, 30] [cite_start]and enforces input validation for IDs, names, emails, and academic years [cite: 40, 42][cite_start], managing the files in `sgms_data/students/`[cite: 13]. [cite_start]Also develops the Grade Management module (Assign, Update, Delete, View) [cite: 31, 32, 33, 34, 35, 36][cite_start], validating floating-point scores [cite: 42][cite_start], mapping them to the grading scale [cite: 44][cite_start], and handling storage in `sgms_data/grades/`[cite: 13]. |
-| **Mawada Alexandar** | [cite_start]**Subjects & Reporting:** Responsible for the Subject Management module (Add, List, Update, Delete)[cite: 20, 21, 22, 23, 24]. [cite_start]Enforces validation rules for alphanumeric subject codes and credit hour integers [cite: 40, 42][cite_start], managing the files inside `sgms_data/subjects/`[cite: 13]. [cite_start]Additionally handles the Reports & Statistics module[cite: 39]. [cite_start]Uses `awk` for floating-point calculations and averages [cite: 51] [cite_start]to dynamically generate Student Transcripts with GPA, Subject Statistics, Top/Failing student reports, and the Full Grade Matrix[cite: 39]. |
-## Validation Rules Implemented
-The system enforces strict input validation to maintain data integrity:
-* **Student ID:** Numeric only, up to 10 digits, strictly unique.
-* **Email:** Must contain an '@' symbol and a domain dot.
-* **Academic Year & Credits:** Restricted to integers between 1 and 6.
-* **Subject Code:** Must follow the format of 2-5 letters followed by 2-4 digits (e.g., CS101).
-* **Grades:** Floating-point values between 0.0 and 100.0, mapped to standard GPA points (0.0 to 4.0).
-
+| **Mariam Asal** | <ul><li>**Main Menu:** Handle core application routing and navigation.</li><li>**Student Management:** Perform full CRUD (Add, List, Update, Delete) operations.</li><li>**Student Validation:** Enforce rules for numeric IDs, names, email formats, and academic years.</li><li>**Student Storage:** Manage records inside `sgms_data/students/`.</li><li>**Grade Management:** Handle grade assignment, updates, deletions, and viewing logic.</li><li>**Grade Validation:** Validate 0.0-100.0 score ranges and map them to the correct grading scale.</li><li>**Grade Storage:** Manage grade records inside `sgms_data/grades/`.</li></ul> |
+| **Mawada Alexandar** | <ul><li>**Subject Management:** Perform full CRUD operations for subjects.</li><li>**Subject Validation:** Enforce alphanumeric format for subject codes and integer checks for credit hours.</li><li>**Subject Storage:** Manage records inside `sgms_data/subjects/`.</li><li>**Reports & Statistics:** Generate dynamic reports including Transcripts, Subject Statistics, Top/Failing Students, and the Full Grade Matrix.</li><li>**Data Processing:** Utilize `awk` for floating-point calculations, averages, and GPA point mapping.</li></ul> |
 ## Additional Features 
 * Data Export: Capable of exporting generated reports to `.txt` or `.csv` files.
 * Advanced Search: Implements real-time student search via partial name matching utilizing `grep`.
