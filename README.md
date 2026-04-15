@@ -51,10 +51,6 @@ Data is strictly stored using flat files with relative pathing. The system autom
 
 ## Team Members & Responsibilities
 
-## Team Members & Responsibilities
-
-## Team Members & Responsibilities
-
 | Team Member | Assigned Modules & Responsibilities |
 | :--- | :--- |
 | **Mariam Asal** | <ul><li>**Main Menu:** Handle core application routing and navigation.</li><li>**Student Management:** Perform full CRUD (Add, List, Update, Delete) operations.</li><li>**Student Validation:** Enforce rules for numeric IDs, names, email formats, and academic years.</li><li>**Student Storage:** Manage records inside `sgms_data/students/`.</li><li>**Grade Management:** Handle grade assignment, updates, deletions, and viewing logic.</li><li>**Grade Validation:** Validate 0.0-100.0 score ranges and map them to the correct grading scale.</li><li>**Grade Storage:** Manage grade records inside `sgms_data/grades/`.</li></ul> |
