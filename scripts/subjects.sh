@@ -1,76 +1,65 @@
-# ==========================================
-# SUBJECT MANAGEMENT MODULE
-# ==========================================
+#! /usr/bin/bash
+shopt -s extglob
+
+
 
 add_subject() {
-    echo "--- Add New Subject ---"
-    read -p "Enter Subject Code (e.g., CS101): " code
-    
-    # Convert code to uppercase automatically to prevent duplicates like cs101 vs CS101
-    code=$(echo "$code" | tr '[:lower:]' '[:upper:]')
-    
-    if [ -z "$code" ]; then 
-        echo "Error: Subject Code cannot be empty!"
-        return 
-    fi
+    while true; do
+      echo "ADD NEW SUBJECT"
+      while true; do
+        read -p "Enter Subject Code 2-5 letters + 2-4 digits, for examble: CS101, MATH203 " code
 
-    if [ -f "sgms_data/subjects/$code.sub" ]; then
-        echo "Error: Subject $code already exists!"
-        return
-    fi
+        if [[ "$code" == "" ]]; then
+        echo "Subject code cannot be empty!"
+        continue
+        fi
 
+        if [[ ! $code =~ ^[A-Za-z]{2,5}[0-9]{2,4}$ ]]; then
+            echo "Not right. please write it as the example: CS101 or MATH203"
+            continue
+        fi
+
+
+        if [[ -f "sgms_data/subjects/$code.sub" ]]; then
+                echo "Subject already exists!"
+                continue
+        fi
+        break 
+    done
+
+   while true; do
     read -p "Enter Subject Name: " name
-    read -p "Enter Credit Hours (1-6): " credits
+
+    if [[ "$name" == "" ]]; then
+        echo "subject name cannot be empty"
+        continue
+    fi
+    break 
+  done
+
+
+    while true; do
+        read -p "Please enter credit hours number between 1 and 6 : " credits
+        if [[ $credits =~ ^[1-6]$ ]]; then
+            break
+        fi
+        echo "Credits must be a number between 1 and 6"
+    done
 
     echo "$code" > "sgms_data/subjects/$code.sub"
     echo "$name" >> "sgms_data/subjects/$code.sub"
     echo "$credits" >> "sgms_data/subjects/$code.sub"
-    
-    echo "Success: Subject '$code' added!"
+
+    echo "Subject added successfully!"
 }
 
 list_subjects() {
-    echo "--- List of Subjects ---"
-    
-    if [ -z "$(ls -A sgms_data/subjects/*.sub 2>/dev/null)" ]; then
-        echo "No subjects found in the database."
-        return
-    fi
-    
-    printf "%-10s | %-30s | %-7s\n" "Code" "Name" "Credits"
-    echo "------------------------------------------------------"
-    
+    echo " ALL SUBJECTS "
+
     for file in sgms_data/subjects/*.sub; do
-        if [ -f "$file" ]; then
-            mapfile -t lines < "$file"
-            printf "%-10s | %-30s | %-7s\n" "${lines[0]}" "${lines[1]}" "${lines[2]}"
+         
+        if [[ -f "$file" ]]; then
+            cat "$file"
         fi
     done
-}
-
-update_subject() {
-    echo "--- Update Subject ---"
-    read -p "Enter Subject Code to update: " code
-    code=$(echo "$code" | tr '[:lower:]' '[:upper:]')
-    
-    if [ ! -f "sgms_data/subjects/$code.sub" ]; then
-        echo "Error: Subject Code $code not found!"
-        return
-    fi
-    
-    mapfile -t current < "sgms_data/subjects/$code.sub"
-    
-    echo "Tip: Press ENTER to keep the current value, or type a new value."
-    
-    read -p "Enter new Name [${current[1]}]: " name
-    name=${name:-${current[1]}}
-    
-    read -p "Enter new Credits [${current[2]}]: " credits
-    credits=${credits:-${current[2]}}
-
-    echo "$code" > "sgms_data/subjects/$code.sub"
-    echo "$name" >> "sgms_data/subjects/$code.sub"
-    echo "$credits" >> "sgms_data/subjects/$code.sub"
-    
-    echo "Success: Subject $code updated successfully!"
 }
