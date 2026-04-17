@@ -26,10 +26,10 @@ grade_menu(){
             return
             ;;
         "")
-            echo "EMPTY, Please enter a number between 1 and 5."
+            echo "EMPTY, Please enter a number between 1 and 6."
             ;;
         *)
-            echo "Something is wrong! Please enter a number between 1 and 5."
+            echo "Something is wrong! Please enter a number between 1 and 6."
             ;;
         esac
 
