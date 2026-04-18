@@ -33,3 +33,60 @@ student_menu(){
     done
 }
 
+
+add_student(){
+    echo "====== ADDING A STUDENT ======"
+    while true; do 
+        read -p "Enter student ID:" student_id
+        filepath="sgms_data/students/${student_id}.stu"
+
+        if [[ ! $student_id =~ ^[0-9]{1,10}$ ]]
+        then 
+            echo "Invalid ID , Try again! "
+        elif [[ -f "$filepath" ]]
+        then
+            echo "ID already exist, enter new one"
+        else 
+            break
+        fi
+    done
+    
+    while true; do 
+        read -p "Enter student name:"  name
+        if [[ -z "$name" ]]
+        then 
+            echo "Name is empty , please enter a name!"
+        else 
+            break
+        fi
+    done
+
+    while true; do 
+    read -p "Enter student eamil:" email
+    if [[ -z "$email" ]]
+    then 
+        echo "Email is empty , please enter a valid email!"
+    
+    elif [[ ! "$email" =~ ^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z]+$ ]]
+    then
+        echo "Invalid Format. Email must contain @ and a domain dot."
+    else 
+        break
+    fi
+    done
+
+    while true; do 
+    read -p "Enter student year:"  year
+    if [[ ! "$year" =~ ^[1-6]$ ]]
+            then 
+            echo "Invalid year. Please enter a number from 1 to 6"
+    else 
+        break
+    fi
+    done
+    
+    echo "$student_id" > "$filepath"
+    echo "$name" >> "$filepath"
+    echo "$email" >> "$filepath"
+    echo "$year" >> "$filepath"
+}
