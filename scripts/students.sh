@@ -90,3 +90,20 @@ add_student(){
     echo "$email" >> "$filepath"
     echo "$year" >> "$filepath"
 }
+
+
+
+list_student(){
+    echo "====== STUDENTS LIST ======"
+    files=$(ls sgms_data/students/*.stu 2>/dev/null)
+
+    if [[ -z "$files" ]]
+    then
+        echo "DB Empty No students to list."
+    else
+        for std in $files
+            do 
+               cat "$std"
+            done
+    fi
+}
