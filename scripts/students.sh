@@ -62,27 +62,27 @@ add_student(){
     done
 
     while true; do 
-    read -p "Enter student eamil:" email
-    if [[ -z "$email" ]]
-    then 
-        echo "Email is empty , please enter a valid email!"
-    
-    elif [[ ! "$email" =~ ^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z]+$ ]]
-    then
-        echo "Invalid Format. Email must contain @ and a domain dot."
-    else 
-        break
-    fi
+        read -p "Enter student eamil:" email
+        if [[ -z "$email" ]]
+        then 
+            echo "Email is empty , please enter a valid email!"
+        
+        elif [[ ! "$email" =~ ^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z]+$ ]]
+        then
+            echo "Invalid Format. Email must contain @ and a domain dot."
+        else 
+            break
+        fi
     done
 
     while true; do 
-    read -p "Enter student year:"  year
-    if [[ ! "$year" =~ ^[1-6]$ ]]
-            then 
-            echo "Invalid year. Please enter a number from 1 to 6"
-    else 
-        break
-    fi
+        read -p "Enter student year:"  year
+        if [[ ! "$year" =~ ^[1-6]$ ]]
+                then 
+                echo "Invalid year. Please enter a number from 1 to 6"
+        else 
+            break
+        fi
     done
     
     echo "$student_id" > "$filepath"
@@ -99,11 +99,38 @@ list_student(){
 
     if [[ -z "$files" ]]
     then
-        echo "DB Empty No students to list."
+        echo "No students to list."
     else
-        for std in $files
-            do 
-               cat "$std"
-            done
+        ls $files
     fi
+}
+
+
+update_student(){
+
+
+
+
+
+}
+
+
+delete_student(){
+    echo "====== DELETE STUDENT ======"
+    while true; do 
+        read -p "Enter Student you want to delete:" std
+        filepath="sgms_data/students/${std}.stu"
+
+        if [[ -z "$std" ]]
+        then
+            echo "ID cannot be empty , please enter an ID" 
+        elif [[ -f "$filepath" ]]
+        then 
+            rm "$filepath" 
+            echo "Student Deleted Succussfully!"
+            break
+        else
+            echo "No Student Found with this ID."
+        fi
+    done
 }
