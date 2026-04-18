@@ -35,7 +35,7 @@ student_menu(){
 
 
 add_student(){
-    echo "====== ADDING A STUDENT ======"
+    echo "====== ADDING NEW STUDENT ======"
     while true; do 
         read -p "Enter student ID:" student_id
         filepath="sgms_data/students/${student_id}.stu"
@@ -107,13 +107,83 @@ list_student(){
 
 
 update_student(){
+    echo "====== Updating Students Data ======"
+    while true; do
+        read -p "Enter student ID you want to Update:" sid
+        filepath="sgms_data/students/${sid}.stu"
+        if [[ -z "$sid" ]]
+            then
+            echo "ID is empty , please enter an ID" 
+        elif [[ ! -f "$filepath" ]]
+            then 
+            echo "ID not Found , Enter Existing ID."
+        else
+            {
+                read -r current_id
+                read -r current_name
+                read -r current_email
+                read -r current_year
+            } < "$filepath"
 
+            echo "What would you like to update?"
+            echo "1) Name"
+            echo "2) Email"
+            echo "3) Year"
+            read -p "Enter your choice (1-3): " choice
 
+            case $choice in 
+                1)
+                    while true; do 
+                        read -p "Enter new student name: " current_name
+                        if [[ -z "$current_name" ]]
+                        then 
+                            echo "Name is empty, please enter a name!"
+                        else 
+                            break
+                        fi
+                    done
+                    ;; 
+                2)
+                    while true; do 
+                        read -p "Enter new student email: " current_email
+                        if [[ -z "$current_email" ]]
+                        then 
+                            echo "Email is empty, please enter a valid email!"
+                        elif [[ ! "$current_email" =~ ^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z]+$ ]]
+                        then
+                            echo "Invalid Format. Email must contain @ and a domain dot."
+                        else 
+                            break
+                        fi
+                    done
+                    ;;
+                3) 
+                    while true; do
+                        read -p "Enter student year:"  current_year
+                        if [[ ! "$current_year" =~ ^[1-6]$ ]]
+                                then 
+                                echo "Invalid year. Please enter a number from 1 to 6"
+                        else 
+                            break
+                        fi
+                    done
+                    ;;
+                *)
+                    echo "Invalid choice! choose a number from (1-3)"
+                    return 
+                    ;;
+            esac
 
+            echo "$current_id" > "$filepath"
+            echo "$current_name" >> "$filepath"
+            echo "$current_email" >> "$filepath"
+            echo "$current_year" >> "$filepath"
 
-
+            echo "Student $sid updated successfully"
+            break
+        fi
+    done
 }
-
 
 delete_student(){
     echo "====== DELETE STUDENT ======"
