@@ -98,3 +98,42 @@ student_transcript() {
         echo "No grades found for this student."
     fi
 }
+
+subject_statistics() {
+    echo " SUBJECT STATISTICS "
+    read -p "Enter Subject Code (e.g., CS101): " subject_code
+
+    grade_file="sgms_data/grades/$subject_code.grd"
+    if [[ ! -f "$grade_file" ]]; then
+        echo "not found"
+        return
+    fi
+
+    awk '
+    BEGIN {
+        FS = "|"
+        max = 0
+        min = 100
+        sum = 0
+        count = 0
+    }
+    {
+        score = $2
+        sum += score
+        count++
+
+        if (score > max) max = score
+        if (score < min) min = score
+    }
+    END {
+        if (count > 0) {
+            avg = sum / count
+            print "Total Students: " count
+            print "Highest Score:  " max
+            print "Lowest Score:   " min
+            printf "Class Average:  %.2f\n", avg
+        } else {
+            print "No data found in the grade file."
+        }
+    }' "$grade_file"
+}
