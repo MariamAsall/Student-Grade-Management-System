@@ -1,7 +1,44 @@
 #! /usr/bin/bash
 shopt -s extglob
 
+subject_menu() {
+    while true; do
 
+        echo "SUBJECT MANAGEMENT MENU"
+        echo "     1) Add Subject"
+        echo "     2) List Subjects"
+        echo "     3) Update Subject"
+        echo "     4) Delete Subject"
+        echo "     5) Back to Main Menu"
+
+        read -p "Please choose only NUMBERS from (1-5): " choice
+
+        case $choice in
+            1)
+                add_subject
+                ;;
+            2)
+                list_subjects
+                ;;
+            3)
+                update_subject
+                ;;
+            4)
+                delete_subject
+                ;;
+            5)
+                echo "Back to the main menu..."
+                return
+                ;;
+            "")
+                echo "EMPTY, Please enter a number between 1 and 5."
+                ;;
+            *)
+                echo "Something is wrong! Please enter a number between 1 and 5."
+                ;;
+        esac
+    done
+}
 
 add_subject() {
     while true; do
