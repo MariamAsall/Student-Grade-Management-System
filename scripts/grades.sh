@@ -155,6 +155,10 @@ Update_grade(){
 
     while true; do 
         read -p "Enter the Code of subject you want to update: " subject
+        if [[ -z "$subject" ]]; then
+            echo "Error: Subject Code cannot be empty."
+            continue
+        fi
         grades_file=${grade_dir}/${subject}.grd
         if [[ ! -f "$grades_file" ]]; then
             echo "Subject doesn't exist. Please Try again"
@@ -165,6 +169,14 @@ Update_grade(){
 
     while true; do 
         read -p "Enter Student ID you want to update its grade: " student_id 
+        if [[ -z "$student_id" ]]; then
+            echo "Error: Student ID cannot be empty."
+            continue
+        elif [[ ! "$student_id" =~ ^[0-9]{1,10}$ ]]; then
+            echo "Error: Invalid ID format. Please use numbers."
+            continue
+        fi
+        
         line=$(grep "^${student_id} |" "$grades_file")
         if [[ -z "$line" ]]; then
             echo "No grade found for this Student."
@@ -286,28 +298,28 @@ view_grades_student(){
         fi
     done 
 
-results=$(for file in "${grade_dir}"/*; do
-        if [[ -f "$file" ]]; then
-            # Search for the ID
-            line=$(grep "^${student_id} |" "$file")
-            
-            if [[ -n "$line" ]]; then
-                subject_code=$(basename "$file" .grd)
-                grade_info=$(echo "$line" | cut -d'|' -f2,3)
-                echo "$subject_code |$grade_info"
+    results=$(for file in "${grade_dir}"/*; do
+            if [[ -f "$file" ]]; then
+                # Search for the ID
+                line=$(grep "^${student_id} |" "$file")
+                
+                if [[ -n "$line" ]]; then
+                    subject_code=$(basename "$file" .grd)
+                    grade_info=$(echo "$line" | cut -d'|' -f2,3)
+                    echo "$subject_code |$grade_info"
+                fi
             fi
-        fi
-    done)
+        done)
 
-    if [[ -z "$results" ]]; then
-        echo "No grades recorded for Student $student_id yet."
-    else
-        echo "---------------------------------------------------------"
-        echo " Grades for Student ID: $student_id"
-        echo "---------------------------------------------------------"
-        echo "Subject | Score | Grade"
-        echo "-----------------------"
-        echo "$results"
-        echo "---------------------------------------------------------"
-    fi
+        if [[ -z "$results" ]]; then
+            echo "No grades recorded for Student $student_id yet."
+        else
+            echo "---------------------------------------------------------"
+            echo " Grades for Student ID: $student_id"
+            echo "---------------------------------------------------------"
+            echo "Subject | Score | Grade"
+            echo "-----------------------"
+            echo "$results"
+            echo "---------------------------------------------------------"
+        fi
 }
