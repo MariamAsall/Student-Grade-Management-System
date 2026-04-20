@@ -192,3 +192,31 @@ Update_grade(){
     echo "Successfully Grade updated to $letter ($score) for Student $student_id in $subject."
 
 }
+
+delete_grade(){
+    echo "====== DELETE EXISTING GRADE ======"
+    while true; do 
+        read -p "Enter Subject Code: " subject
+        grades_file="sgms_data/grades/${subject}.grd"
+        
+        if [[ ! -f "$grades_file" ]]; then
+            echo "Subject doesn't exist. Please try again."
+        else 
+            break 
+        fi
+    done 
+
+    while true; do 
+        read -p "Enter Student ID to delete their grade: " student_id 
+        
+        if ! grep -q "^${student_id} |" "$grades_file"; then
+            echo "No grade found for Student $student_id in this subject."
+            return
+        else
+            sed -i "/^${student_id} |/d" "$grades_file"
+            
+            echo "Successfully deleted grade for Student $student_id from $subject."
+            break 
+        fi
+    done
+}
