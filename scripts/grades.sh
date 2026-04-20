@@ -38,7 +38,7 @@ grade_menu(){
 
 
 get_letter_grade(){
-    score=$1
+    local score=$1
     awk -v s="$score" '
     BEGIN {
         if (s >= 90.0 && s <= 100.0) 
@@ -69,7 +69,7 @@ get_letter_grade(){
 }
 
 get_gpa_points(){
-    score=$1
+    local score=$1
     awk -v s="$score" '
     BEGIN {
         if (s >= 85.0 && s <= 100.0)
@@ -98,7 +98,7 @@ get_gpa_points(){
 }
 
 Assign_Grade(){
-    echo "====== Assinging GRADE to STUDENT ======"
+    echo "====== Assigning GRADE to STUDENT ======"
     while true; do
         read -p "Enter Student ID: " student_id
         if [[ ! -f "sgms_data/students/${student_id}.stu" ]] ;
@@ -146,10 +146,10 @@ Assign_Grade(){
 Update_grade(){
     echo "====== UPDATE EXISTING GRADE ======"
     while true; do 
-        read -p "Enter the Codeof subject ypu want to update: " subject
+        read -p "Enter the Code of subject ypu want to update: " subject
         grades_file=sgms_data/grades/${subject}.grd
         if [[ ! -f "$grades_file" ]]; then
-            echo "Subject doesnn't exist. Please Try again"
+            echo "Subject doesn't exist. Please Try again"
         else 
             break 
         fi
