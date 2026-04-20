@@ -171,7 +171,7 @@ update_student(){
                         if [[ -z "$current_name" ]]
                         then 
                             echo "Name is empty, please enter a name!"
-                        elif [[ ! "$name" =~ ^[a-zA-Z\ ]+$ ]]; then 
+                        elif [[ ! "$current_name" =~ ^[a-zA-Z\ ]+$ ]]; then 
                             echo "Name cannot contain numbers or special characters. Letters only."
                         else 
                             break
