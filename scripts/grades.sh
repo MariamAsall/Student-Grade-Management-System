@@ -221,5 +221,71 @@ delete_grade(){
 }
 
 view_grades_subject(){
+    echo "====== VIEW GRADES BY SUBJECT ======"
+    while true; do 
+        read -p "Enter Subject Code to view grades: " subject
+        subject=$(echo "$subject" | tr '[:lower:]' '[:upper:]')
+        grades_file="sgms_data/grades/${subject}.grd"
+        
+        if [[ ! -f "$grades_file" ]]; then
+            echo "Error: Subject doesn't exist or has no grades recorded yet."
+            return 
+        else 
+            break 
+        fi
+    done 
+
+    echo "---------------------------------------------------------"
+    echo " Transcript for Subject: $subject"
+    echo "---------------------------------------------------------"
+    echo "Student ID | Score | Letter Grade"
+    echo "---------------------------------------------------------"
     
+    cat "$grades_file"
+    
+    echo "---------------------------------------------------------"
+    echo "End of records."
+}
+
+view_grades_student(){
+    echo "====== VIEW GRADES BY STUDENT ======"
+    while true; do 
+        read -p "Enter Student ID to view their grades: " student_id 
+        if [[ ! -f "sgms_data/students/${student_id}.stu" ]]; then
+            echo "This student doesn't exist. Please try again."
+            continue
+        else 
+            break 
+        fi
+    done 
+
+    echo "---------------------------------------------------------"
+    echo " Grades for Student ID: $student_id"
+    echo "---------------------------------------------------------"
+    echo "Subject Code | Score | Letter Grade"
+    echo "---------------------------------------------------------"
+
+    found_grades=false
+
+    for file in sgms_data/grades/*.grd; do
+        if [[ -f "$file" ]]; then
+            line=$(grep "^${student_id} |" "$file")
+            
+            if [[ -n "$line" ]]; then
+                found_grades=true
+                
+                subject_code=$(basename "$file" .grd)
+                
+                score=$(echo "$line" | cut -d'|' -f2)
+                letter=$(echo "$line" | cut -d'|' -f3)
+                echo "$subject_code | $score | $letter"
+            fi
+        fi
+    done
+
+    
+    if [[ "$found_grades" == false ]]; then
+        echo "No grades recorded for Student $student_id yet."
+    fi
+
 }
