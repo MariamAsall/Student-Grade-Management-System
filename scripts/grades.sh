@@ -97,18 +97,24 @@ Assign_Grade(){
     echo "Assigning Grade to Student"
     while true; do
         read -p "Enter Student ID: " student_id
-        if [[ ! -f "${students_dir}/${student_id}.stu" ]] ;
-        then 
-            echo "This student doesn't exist."
+        
+        if [[ -z "$student_id" ]]; then 
+            echo "ID cannot be empty. Please enter a valid Student ID."
+        elif [[ ! "$student_id" =~ ^[0-9]{1,10}$ ]]; then
+            echo "Invalid format. Student ID must be numeric (e.g., 100)."
+        elif [[ ! -f "${students_dir}/${student_id}.stu" ]]; then 
+            echo "Student '$student_id' does not exist in the system."
         else
             break
         fi 
-    done 
+    done
 
     while true; do 
         read -p "Enter Subject Name: " subject
-            if [[ ! -f "${subjects_dir}/${subject}.sub" ]]; then
-                echo "Subject Not Found, Enter another one."
+        if [[ -z "$subject" ]]; then
+            echo "Subject cannot be empty. Please enter a valid Subject Code."
+        elif [[ ! -f "${subjects_dir}/${subject}.sub" ]]; then
+            echo "Subject '$subject' not found. Please enter an existing subject."
         else
             break
         fi
