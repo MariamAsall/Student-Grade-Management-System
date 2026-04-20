@@ -38,7 +38,10 @@ student_menu(){
 
 
 add_student(){
+    echo "------------------------------------"
     echo "Adding New Student: "
+    echo "------------------------------------"
+
     while true; do 
         read -p "Enter student ID:" student_id
     filepath="${students_dir}/${student_id}.stu"
@@ -65,6 +68,8 @@ add_student(){
         fi
     done
 
+    echo "------------------------------------"
+
     while true; do 
         read -p "Enter student email:" email
         if [[ -z "$email" ]]
@@ -79,6 +84,8 @@ add_student(){
         fi
     done
 
+    echo "------------------------------------"
+
     while true; do 
         read -p "Enter student year:"  year
         if [[ ! "$year" =~ ^[1-6]$ ]]
@@ -88,6 +95,8 @@ add_student(){
             break
         fi
     done
+
+    echo "------------------------------------"
 
     echo "student added successfully!"
     echo "$student_id" > "$filepath"
@@ -99,17 +108,25 @@ add_student(){
 
 
 list_student(){
+    echo "------------------------------------"
     echo "Students List: "
+    echo "------------------------------------"
+
     if [ -z "$(ls -A "${students_dir}")" ]; then
         echo "No students to list."
     else
         ls "${students_dir}" | cut -d'.' -f1
     fi
+
+    echo "------------------------------------"
 }
 
 
 search_student(){
+    echo "------------------------------------"
     echo "Searching for student by Name:"
+    echo "------------------------------------"
+
     while true; do
         read -p "Enter the student's name to search: " search_name
         
@@ -121,8 +138,10 @@ search_student(){
         fi
     done
 
-    echo "--- Search Results ---"
-    
+    echo "------------------------------------"
+    echo "Search Results:"
+    echo "------------------------------------"
+
     for file in $(grep -il "$search_name" "${students_dir}"/*.stu 2>/dev/null); do
         {
             read -r id
@@ -133,11 +152,16 @@ search_student(){
         
         echo "ID: $id | Name: $name | Year: $year | Email: $email"
     done
+
+    echo "------------------------------------"
 }
 
 
 update_student(){
+    echo "------------------------------------"
     echo "Updating Students Data:"
+    echo "------------------------------------"
+
     while true; do
         read -p "Enter student ID you want to Update:" sid
         filepath="${students_dir}/${sid}.stu"
@@ -155,11 +179,14 @@ update_student(){
                 read -r current_year
             } < "$filepath"
 
+            echo "------------------------------------"
+
             echo "What would you like to update?"
             echo "1) Name"
             echo "2) Email"
             echo "3) Year"
             read -p "Enter your choice (1-3): " choice
+            echo "------------------------------------"
 
             case $choice in 
                 1)
@@ -218,10 +245,14 @@ update_student(){
 }
 
 delete_student(){
+    echo "------------------------------------"
     echo "Deleting Student: "
+    echo "------------------------------------"
+
     while true; do 
         read -p "Enter Student you want to delete:" std
         filepath="${students_dir}/${std}.stu"
+        echo "------------------------------------"
 
         if [[ -z "$std" ]]
         then
