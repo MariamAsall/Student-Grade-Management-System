@@ -193,7 +193,7 @@ delete_grade(){
     echo "Deleting an Existing Grade"
     while true; do 
         read -p "Enter Subject Code: " subject
-        grades_file="sgms_data/grades/${subject}.grd"
+        grades_file="${grade_dir}/${subject}.grd"
         
         if [[ ! -f "$grades_file" ]]; then
             echo "Subject doesn't exist. Please try again."
@@ -221,7 +221,7 @@ view_grades_subject(){
     while true; do 
         read -p "Enter Subject Code to view grades: " subject
         subject=$(echo "$subject" | tr '[:lower:]' '[:upper:]')
-        grades_file="sgms_data/grades/${subject}.grd"
+        grades_file=${grade_dir}/${subject}.grd"
         
         if [[ ! -f "$grades_file" ]]; then
             echo "Subject doesn't exist or has no grades yet."
@@ -263,7 +263,7 @@ view_grades_student(){
 
     found_grades=false
 
-    for file in sgms_data/grades/*.grd; do
+    for file in ${grade_dir}"/*.grd; do
         if [[ -f "$file" ]]; then
             line=$(grep "^${student_id} |" "$file")
             
