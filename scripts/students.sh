@@ -124,17 +124,16 @@ list_student(){
 }
 
 
-search_student(){
+search_student() {
     echo "------------------------------------"
     echo "Searching for student by Name:"
     echo "------------------------------------"
 
     while true; do
-        read -p "Enter the student's name to search: " search_name
+        read -p "Enter the exact student's name to search: " search_name
         
         if [[ -z "$search_name" ]]; then
             echo "Search cannot be empty. Please try again."
-            continue
         else
             break
         fi
@@ -144,16 +143,27 @@ search_student(){
     echo "Search Results:"
     echo "------------------------------------"
 
-    for file in $(grep -il "$search_name" "${students_dir}"/*.stu 2>/dev/null); do
-        {
-            read -r id
-            read -r name
-            read -r email
-            read -r year
-        } < "$file"
-        
-        echo "ID: $id | Name: $name | Year: $year | Email: $email"
+    found=0 
+
+    for file in "${students_dir}"/*; do
+        if [[ -f "$file" ]]; then
+            {
+                read -r id
+                read -r name
+                read -r email
+                read -r year
+            } < "$file"
+            
+            if [[ "$name" == "$search_name" ]]; then
+                echo "ID: $id | Name: $name | Year: $year | Email: $email"
+                found=1
+            fi
+        fi
     done
+
+    if [[ $found -eq 0 ]]; then
+        echo "No student found with this name: $search_name"
+    fi
 
     echo "------------------------------------"
 }
