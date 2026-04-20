@@ -94,7 +94,10 @@ get_gpa_points() {
 }
 
 Assign_Grade(){
+    echo "------------------------------------"
     echo "Assigning Grade to Student"
+    echo "------------------------------------"
+
     while true; do
         read -p "Enter Student ID: " student_id
         
@@ -146,9 +149,12 @@ Assign_Grade(){
 }
 
 Update_grade(){
+    echo "------------------------------------"
     echo "Updating an Existing Grade"
+    echo "------------------------------------"
+
     while true; do 
-        read -p "Enter the Code of subject ypu want to update: " subject
+        read -p "Enter the Code of subject you want to update: " subject
         grades_file=${grade_dir}/${subject}.grd
         if [[ ! -f "$grades_file" ]]; then
             echo "Subject doesn't exist. Please Try again"
@@ -196,7 +202,9 @@ Update_grade(){
 }
 
 delete_grade(){
+    echo "------------------------------------"
     echo "Deleting an Existing Grade"
+    echo "------------------------------------"
     while true; do 
         read -p "Enter Subject Code: " subject
         grades_file="${grade_dir}/${subject}.grd"
@@ -210,22 +218,35 @@ delete_grade(){
 
     while true; do 
         read -p "Enter Student ID to delete their grade: " student_id 
+        if [[ -z "$student_id" ]]; then
+            echo "Student ID cannot be empty."
+        elif [[ ! "$student_id" =~ ^[0-9]{1,10}$ ]]; then
+            echo "Error: Invalid ID format. Please enter numbers only."
         
-        if ! grep -q "^${student_id} |" "$grades_file"; then
+        elif ! grep -q "^${student_id} |" "$grades_file"; then
             echo "No grade found for Student $student_id in this subject."
             return
         else
             sed -i "/^${student_id} |/d" "$grades_file"
             echo "Successfully deleted grade for Student $student_id from $subject."
+            echo "-----------------------------------------------------------------"
             break 
         fi
     done
 }
 
 view_grades_subject(){
+    echo "------------------------------------"
     echo "Viewing Grades by Subjects"
+    echo "------------------------------------"
+
     while true; do 
         read -p "Enter Subject Code to view grades: " subject
+
+        if [[ -z "$subject" ]]; then
+            echo "Subject Code cannot be empty."
+            continue
+        fi
         grades_file="${grade_dir}/${subject}.grd"
         
         if [[ ! -f "$grades_file" ]]; then
@@ -243,16 +264,21 @@ view_grades_subject(){
     echo "---------------------------------------------------------"
     
     cat "$grades_file"
-    
     echo "---------------------------------------------------------"
-    echo "End of records."
 }
 
 view_grades_student(){
+    echo "------------------------------------"
     echo "Viewing Grades by Students"
+    echo "------------------------------------"
+
     while true; do 
         read -p "Enter Student ID to view their grades: " student_id 
-        if [[ ! -f "${students_dir}/${student_id}.stu" ]]; then
+        if [[ -z "$student_id" ]]; then
+            echo "Student ID cannot be empty."
+        elif [[ ! "$student_id" =~ ^[0-9]{1,10}$ ]]; then
+            echo "Invalid ID format. Please use numbers only."
+        elif [[ ! -f "${students_dir}/${student_id}.stu" ]]; then
             echo "This student doesn't exist. Please try again."
             continue
         else 
@@ -273,7 +299,6 @@ view_grades_student(){
             line=$(grep "^${student_id} |" "$file")
             
             if [[ -n "$line" ]]; then
-                # FIXED: Change to 1 when found
                 found_grades=1
                 
                 subject_code=$(basename "$file" .grd)
