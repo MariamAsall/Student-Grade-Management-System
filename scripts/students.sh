@@ -59,14 +59,14 @@ add_student(){
         then 
             echo "Name is empty , please enter a name!"
         elif [[ ! "$name" =~ ^[a-zA-Z\ ]+$ ]]; then 
-            echo "Namecannot contain numbers or special characters. Letters only."
+            echo "Name cannot contain numbers or special characters. Letters only."
         else 
             break
         fi
     done
 
     while true; do 
-        read -p "Enter student eamil:" email
+        read -p "Enter student email:" email
         if [[ -z "$email" ]]
         then 
             echo "Email is empty , please enter a valid email!"
@@ -88,7 +88,8 @@ add_student(){
             break
         fi
     done
-    
+
+    echo "student added successfully!"
     echo "$student_id" > "$filepath"
     echo "$name" >> "$filepath"
     echo "$email" >> "$filepath"
@@ -170,6 +171,8 @@ update_student(){
                         if [[ -z "$current_name" ]]
                         then 
                             echo "Name is empty, please enter a name!"
+                        elif [[ ! "$name" =~ ^[a-zA-Z\ ]+$ ]]; then 
+                            echo "Name cannot contain numbers or special characters. Letters only."
                         else 
                             break
                         fi
