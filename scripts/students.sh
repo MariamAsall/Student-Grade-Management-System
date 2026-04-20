@@ -55,6 +55,8 @@ add_student(){
             break
         fi
     done
+    echo "------------------------------------"
+
     
     while true; do 
         read -p "Enter student name:"  name
