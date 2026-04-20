@@ -114,6 +114,8 @@ Assign_Grade(){
 
     while true; do 
         read -p "Enter Subject Code: " subject
+        subject=$(echo "$subject" | tr '[:lower:]' '[:upper:]')
+
         if [[ -z "$subject" ]]; then
             echo "Subject cannot be empty. Please enter a valid Subject Code."
         elif [[ ! -f "${subjects_dir}/${subject}.sub" ]]; then
@@ -155,6 +157,7 @@ Update_grade(){
 
     while true; do 
         read -p "Enter the Code of subject you want to update: " subject
+        subject=$(echo "$subject" | tr '[:lower:]' '[:upper:]')
         if [[ -z "$subject" ]]; then
             echo "Error: Subject Code cannot be empty."
             continue
@@ -176,7 +179,7 @@ Update_grade(){
             echo "Error: Invalid ID format. Please use numbers."
             continue
         fi
-        
+
         line=$(grep "^${student_id} |" "$grades_file")
         if [[ -z "$line" ]]; then
             echo "No grade found for this Student."
@@ -254,6 +257,7 @@ view_grades_subject(){
 
     while true; do 
         read -p "Enter Subject Code to view grades: " subject
+        subject=$(echo "$subject" | tr '[:lower:]' '[:upper:]')
 
         if [[ -z "$subject" ]]; then
             echo "Subject Code cannot be empty."
