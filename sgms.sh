@@ -10,10 +10,11 @@ mkdir -p "$students_dir"
 mkdir -p "$subjects_dir"
 mkdir -p "$grade_dir"
 
+main_menu
+
 source scripts/students.sh
 source scripts/subjects.sh
 source scripts/grades.sh
 source scripts/reports.sh
 source scripts/main_menu.sh
 
-main_menu
