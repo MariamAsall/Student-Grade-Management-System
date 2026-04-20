@@ -22,7 +22,7 @@ student_menu(){
         5)
             delete_student;;
         6)
-            echo "Back to the main menu..."
+            echo "Back to the main menu"
             return
             ;;
         "")
@@ -38,7 +38,7 @@ student_menu(){
 
 
 add_student(){
-    echo "====== ADDING NEW STUDENT ======"
+    echo "Adding New Student: "
     while true; do 
         read -p "Enter student ID:" student_id
     filepath="${students_dir}/${student_id}.stu"
@@ -96,7 +96,7 @@ add_student(){
 
 
 list_student(){
-    echo "====== STUDENTS LIST ======"
+    echo "Students List: "
     files=$(ls "${students_dir}"/*.stu 2>/dev/null)
 
     if [[ -z "$files" ]]
@@ -109,7 +109,7 @@ list_student(){
 
 
 search_student(){
-    echo "====== SEARCH STUDENT ======"
+    echo "Searching for student by Name:"
     while true; do
         read -p "Enter the student's name to search: " search_name
         
@@ -137,7 +137,7 @@ search_student(){
 
 
 update_student(){
-    echo "====== Updating Students Data ======"
+    echo "Updating Students Data:"
     while true; do
         read -p "Enter student ID you want to Update:" sid
         filepath="${students_dir}/${sid}.stu"
@@ -216,7 +216,7 @@ update_student(){
 }
 
 delete_student(){
-    echo "====== DELETE STUDENT ======"
+    echo "Deleting Student: "
     while true; do 
         read -p "Enter Student you want to delete:" std
         filepath="${students_dir}/${std}.stu"

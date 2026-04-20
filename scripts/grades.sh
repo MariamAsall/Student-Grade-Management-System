@@ -98,7 +98,7 @@ get_gpa_points(){
 }
 
 Assign_Grade(){
-    echo "====== Assigning GRADE to STUDENT ======"
+    echo "Assigning Grade to Student"
     while true; do
         read -p "Enter Student ID: " student_id
         if [[ ! -f "${students_dir}/${student_id}.stu" ]] ;
@@ -112,7 +112,7 @@ Assign_Grade(){
     while true; do 
         read -p "Enter Subject Name: " subject
             if [[ ! -f "${subjects_dir}/${subject}.sub" ]]; then
-                echo "Subject Not Found! Enter another one."
+                echo "Subject Not Found, Enter another one."
         else
             break
         fi
@@ -144,7 +144,7 @@ Assign_Grade(){
 }
 
 Update_grade(){
-    echo "====== UPDATE EXISTING GRADE ======"
+    echo "Updating an Existing Grade"
     while true; do 
         read -p "Enter the Code of subject ypu want to update: " subject
         grades_file=${grade_dir}/${subject}.grd
@@ -159,14 +159,14 @@ Update_grade(){
         read -p "Enter Student ID you want to update its grade: " student_id 
         line=$(grep "^${student_id} |" "$grades_file")
         if [[ -z "$line" ]]; then
-            echo "No grade found for Student $student_id in this subject."
+            echo "No grade found for this Student."
             return
         else
             current_score=$(echo "$line" | cut -d'|' -f2)
             current_grade=$(echo "$line" | cut -d'|' -f3)
 
             echo "-----------------------------------------------------------"
-            echo "Student Found! Current Score:$current_score" $current_grade
+            echo "Student Found Current Score:$current_score" $current_grade
             echo "------------------------------------------------------------"
             break 
         fi
@@ -194,7 +194,7 @@ Update_grade(){
 }
 
 delete_grade(){
-    echo "====== DELETE EXISTING GRADE ======"
+    echo "Deleting an Existing Grade"
     while true; do 
         read -p "Enter Subject Code: " subject
         grades_file="sgms_data/grades/${subject}.grd"
@@ -221,14 +221,14 @@ delete_grade(){
 }
 
 view_grades_subject(){
-    echo "====== VIEW GRADES BY SUBJECT ======"
+    echo "Viewing Grades by Subjects"
     while true; do 
         read -p "Enter Subject Code to view grades: " subject
         subject=$(echo "$subject" | tr '[:lower:]' '[:upper:]')
         grades_file="sgms_data/grades/${subject}.grd"
         
         if [[ ! -f "$grades_file" ]]; then
-            echo "Error: Subject doesn't exist or has no grades recorded yet."
+            echo "Subject doesn't exist or has no grades yet."
             return 
         else 
             break 
@@ -248,7 +248,7 @@ view_grades_subject(){
 }
 
 view_grades_student(){
-    echo "====== VIEW GRADES BY STUDENT ======"
+    echo "Viewing Grades by Students"
     while true; do 
         read -p "Enter Student ID to view their grades: " student_id 
         if [[ ! -f "${grade_dir}/${student_id}.stu" ]]; then
