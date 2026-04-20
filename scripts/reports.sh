@@ -137,3 +137,95 @@ subject_statistics() {
         }
     }' "$grade_file"
 }
+
+get_weighted_points() {
+    local score=$1
+    local credits=$2
+
+    awk -v s="$score" -v c="$credits" 'BEGIN {
+        if (s >= 90) p=4.0; else if (s >= 85) p=4.0;
+        else if (s >= 80) p=3.7; else if (s >= 75) p=3.3;
+        else if (s >= 70) p=3.0; else if (s >= 65) p=2.7;
+        else if (s >= 60) p=2.3; else if (s >= 55) p=2.0;
+        else if (s >= 50) p=1.7; else if (s >= 45) p=1.0;
+        else p=0.0;
+        print (p * c)
+    }'
+}
+
+show_top_students() {
+    echo " TOP STUDENTS BY GPA "
+    temp_list="sgms_data/temp_ranking.txt"
+    > "$temp_list"
+
+    for stu_file in sgms_data/subjects/*.stu; do
+        sid=$(basename "$stu_file" .stu)
+        name=$(sed -n '2p' "$stu_file")
+
+        total_pts=0
+        total_creds=0
+
+        for grd_file in sgms_data/grades/*.grd; do
+            row=$(grep "^$sid|" "$grd_file")
+            if [[ -n "$row" ]]; then
+                subj=$(basename "$grd_file" .grd)
+                score=$(echo "$row" | cut -d'|' -f2)
+                credits=$(sed -n '3p' "sgms_data/subjects/$subj.sub")
+
+               
+                wp=$(get_weighted_points "$score" "$credits")
+
+                total_pts=$(awk "BEGIN {print $total_pts + $wp}")
+                total_creds=$((total_creds + credits))
+            fi
+        done
+
+        if [[ $total_creds -gt 0 ]]; then
+            gpa=$(awk "BEGIN {printf \"%.2f\", $total_pts / $total_creds}")
+            echo "$gpa | $name ($sid)" >> "$temp_list"
+        fi
+    done
+
+    sort -rn "$temp_list" | head -n 10
+    rm "$temp_list"
+}
+
+show_failing_students() {
+    echo " FAILING STUDENTS REPORT "
+    temp_list="sgms_data/failing_temp.txt"
+    > "$temp_list"
+
+    for stu_file in sgms_data/students/*.stu; do
+        sid=$(basename "$stu_file" .stu)
+        name=$(sed -n '2p' "$stu_file")
+
+        total_pts=0
+        total_creds=0
+
+        for grd_file in sgms_data/grades/*.grd; do
+            row=$(grep "^$sid|" "$grd_file")
+            if [[ -n "$row" ]]; then
+                subj=$(basename "$grd_file" .grd)
+                score=$(echo "$row" | cut -d'|' -f2)
+                credits=$(sed -n '3p' "sgms_data/subjects/$subj.sub")
+
+                
+                result=$(get_grade_data "$score" "$credits")
+                wp=$(echo "$result" | cut -d'|' -f1)
+
+                total_pts=$(awk "BEGIN {print $total_pts + $wp}")
+                total_creds=$((total_creds + credits))
+            fi
+        done
+
+        if [[ $total_creds -gt 0 ]]; then
+            gpa=$(awk "BEGIN {printf \"%.2f\", $total_pts / $total_creds}")
+            echo "$gpa | $name ($sid)" >> "$temp_list"
+        fi
+    done
+
+    echo "GPA  | NAME (ID)"
+    awk -F'|' '$1 < 2.0 {print $0}' "$temp_list" | sort -n
+
+    rm "$temp_list"
+}
