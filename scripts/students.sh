@@ -126,11 +126,11 @@ list_student(){
 
 search_student() {
     echo "------------------------------------"
-    echo "Searching for student by Name:"
+    echo "Searching for student by Partial Name:"
     echo "------------------------------------"
 
     while true; do
-        read -p "Enter the exact student's name to search: " search_name
+        read -p "Enter student's name: " search_name
         
         if [[ -z "$search_name" ]]; then
             echo "Search cannot be empty. Please try again."
@@ -147,14 +147,14 @@ search_student() {
 
     for file in "${students_dir}"/*; do
         if [[ -f "$file" ]]; then
-            {
-                read -r id
-                read -r name
-                read -r email
-                read -r year
-            } < "$file"
-            
-            if [[ "$name" == "$search_name" ]]; then
+            if sed -n '2p' "$file" | grep -iq "$search_name"; then
+                {
+                    read -r id
+                    read -r name
+                    read -r email
+                    read -r year
+                } < "$file"
+                
                 echo "ID: $id | Name: $name | Year: $year | Email: $email"
                 found=1
             fi
@@ -162,12 +162,11 @@ search_student() {
     done
 
     if [[ $found -eq 0 ]]; then
-        echo "No student found with this name: $search_name"
+        echo "No student found containing the letters: $search_name"
     fi
 
     echo "------------------------------------"
 }
-
 
 update_student(){
     echo "------------------------------------"
