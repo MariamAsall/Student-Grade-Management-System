@@ -263,7 +263,7 @@ view_grades_student(){
 
     found_grades=false
 
-    for file in ${grade_dir}"/*.grd; do
+    for file in ${grade_dir}"/*; do
         if [[ -f "$file" ]]; then
             line=$(grep "^${student_id} |" "$file")
             
