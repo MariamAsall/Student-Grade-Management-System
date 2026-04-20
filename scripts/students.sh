@@ -38,7 +38,10 @@ student_menu(){
 
 
 add_student(){
+    echo "------------------------------------"
     echo "Adding New Student: "
+    echo "------------------------------------"
+
     while true; do 
         read -p "Enter student ID:" student_id
     filepath="${students_dir}/${student_id}.stu"
@@ -52,6 +55,8 @@ add_student(){
             break
         fi
     done
+    echo "------------------------------------"
+
     
     while true; do 
         read -p "Enter student name:"  name
@@ -59,14 +64,16 @@ add_student(){
         then 
             echo "Name is empty , please enter a name!"
         elif [[ ! "$name" =~ ^[a-zA-Z\ ]+$ ]]; then 
-            echo "Namecannot contain numbers or special characters. Letters only."
+            echo "Name cannot contain numbers or special characters. Letters only."
         else 
             break
         fi
     done
 
+    echo "------------------------------------"
+
     while true; do 
-        read -p "Enter student eamil:" email
+        read -p "Enter student email:" email
         if [[ -z "$email" ]]
         then 
             echo "Email is empty , please enter a valid email!"
@@ -79,6 +86,8 @@ add_student(){
         fi
     done
 
+    echo "------------------------------------"
+
     while true; do 
         read -p "Enter student year:"  year
         if [[ ! "$year" =~ ^[1-6]$ ]]
@@ -88,7 +97,10 @@ add_student(){
             break
         fi
     done
-    
+
+    echo "------------------------------------"
+
+    echo "student added successfully!"
     echo "$student_id" > "$filepath"
     echo "$name" >> "$filepath"
     echo "$email" >> "$filepath"
@@ -98,48 +110,69 @@ add_student(){
 
 
 list_student(){
+    echo "------------------------------------"
     echo "Students List: "
-    files=$(ls "${students_dir}"/*.stu 2>/dev/null)
+    echo "------------------------------------"
 
-    if [[ -z "$files" ]]
-    then
+    if [ -z "$(ls -A "${students_dir}")" ]; then
         echo "No students to list."
     else
-        ls $files
+        ls "${students_dir}" | cut -d'.' -f1
     fi
+
+    echo "------------------------------------"
 }
 
 
-search_student(){
-    echo "Searching for student by Name:"
+search_student() {
+    echo "------------------------------------"
+    echo "Searching for student by Partial Name:"
+    echo "------------------------------------"
+
     while true; do
-        read -p "Enter the student's name to search: " search_name
+        read -p "Enter student's name: " search_name
         
         if [[ -z "$search_name" ]]; then
             echo "Search cannot be empty. Please try again."
-            continue
         else
             break
         fi
     done
 
-    echo "--- Search Results ---"
-    
-    for file in $(grep -il "$search_name" "${students_dir}"/*.stu 2>/dev/null); do
-        {
-            read -r id
-            read -r name
-            read -r email
-            read -r year
-        } < "$file"
-        
-        echo "ID: $id | Name: $name | Year: $year | Email: $email"
+    echo "------------------------------------"
+    echo "Search Results:"
+    echo "------------------------------------"
+
+    found=0 
+
+    for file in "${students_dir}"/*; do
+        if [[ -f "$file" ]]; then
+            if sed -n '2p' "$file" | grep -iq "$search_name"; then
+                {
+                    read -r id
+                    read -r name
+                    read -r email
+                    read -r year
+                } < "$file"
+                
+                echo "ID: $id | Name: $name | Year: $year | Email: $email"
+                found=1
+            fi
+        fi
     done
+
+    if [[ $found -eq 0 ]]; then
+        echo "No student found containing the letters: $search_name"
+    fi
+
+    echo "------------------------------------"
 }
 
-
 update_student(){
+    echo "------------------------------------"
     echo "Updating Students Data:"
+    echo "------------------------------------"
+
     while true; do
         read -p "Enter student ID you want to Update:" sid
         filepath="${students_dir}/${sid}.stu"
@@ -157,11 +190,14 @@ update_student(){
                 read -r current_year
             } < "$filepath"
 
+            echo "------------------------------------"
+
             echo "What would you like to update?"
             echo "1) Name"
             echo "2) Email"
             echo "3) Year"
             read -p "Enter your choice (1-3): " choice
+            echo "------------------------------------"
 
             case $choice in 
                 1)
@@ -170,6 +206,8 @@ update_student(){
                         if [[ -z "$current_name" ]]
                         then 
                             echo "Name is empty, please enter a name!"
+                        elif [[ ! "$current_name" =~ ^[a-zA-Z\ ]+$ ]]; then 
+                            echo "Name cannot contain numbers or special characters. Letters only."
                         else 
                             break
                         fi
@@ -218,10 +256,14 @@ update_student(){
 }
 
 delete_student(){
+    echo "------------------------------------"
     echo "Deleting Student: "
+    echo "------------------------------------"
+
     while true; do 
         read -p "Enter Student you want to delete:" std
         filepath="${students_dir}/${std}.stu"
+        echo "------------------------------------"
 
         if [[ -z "$std" ]]
         then
