@@ -100,3 +100,53 @@ list_subjects() {
         fi
     done
 }
+
+update_subject() {
+    echo " UPDATE SUBJECT "
+
+    
+    read -p "the  Code to update: " code
+
+    if [[ ! -f "sgms_data/subjects/$code.sub" ]]; then
+        echo "Error: Subject $code not found!"
+        return 
+    fi
+
+    echo "okay now onto the updates"
+
+    while true; do
+        read -p "Enter New Subject Name: " new_name
+        if [[ "$new_name" == "" ]]; then
+        echo "subject name cannot be empty"
+        
+         continue
+        fi
+        break
+    done
+
+    while true; do
+        read -p "Please enter credit hours number between 1 and 6 :" new_credits
+        if [[ $new_credits =~ ^[1-6]$ ]]; then
+            break
+        fi
+        echo "Credits must be a number between 1 and 6"
+    done
+
+
+    echo "$code" > "sgms_data/subjects/$code.sub"
+    echo "$new_name" >> "sgms_data/subjects/$code.sub"
+    echo "$new_credits" >> "sgms_data/subjects/$code.sub"
+
+    echo "✔ Subject updated successfully!"
+}
+
+delete_subject() {
+    read -p "Enter the Subject Code to delete: " code
+
+    if [[ -f "sgms_data/subjects/$code.sub" ]]; then
+        rm "sgms_data/subjects/$code.sub"
+        echo "subject removed successfully"
+    else
+        echo "subject not found"
+    fi
+}
