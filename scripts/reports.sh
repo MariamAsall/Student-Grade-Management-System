@@ -42,7 +42,6 @@ reports_menu() {
     done
 }
 
-# Correcting the function names to match your menu calls
 show_transcript() {
     read -p "Enter Student ID: " myid
 
@@ -57,7 +56,6 @@ show_transcript() {
     total_points=0
     total_credits=0
 
-    # Look through all grade files
     for file in "${grade_dir}"/*.grd; do
         [[ -e "$file" ]] || continue
         row=$(grep "^$myid |" "$file")
@@ -66,11 +64,8 @@ show_transcript() {
             subj=$(basename "$file" .grd)
             score=$(echo "$row" | cut -d'|' -f2 | xargs)
             
-            # Get credits from line 3 of the subject file
             credits=$(sed -n '3p' "${subjects_dir}/${subj}.sub")
 
-            # Calculate weighted points using your awk logic
-            # Weighted points = GPA_Points * Credits
             result=$(awk -v s="$score" -v c="$credits" 'BEGIN {
                 if (s >= 85) p=4.0; else if (s >= 80) p=3.7;
                 else if (s >= 75) p=3.3; else if (s >= 70) p=3.0;
@@ -129,7 +124,6 @@ subject_stats() {
     }' "$grade_file"
 }
 
-# Helper function to get single GPA
 get_student_gpa() {
     local sid=$1
     local t_pts=0
@@ -168,7 +162,6 @@ top_students() {
     temp_list="${data_dir}/temp_ranking.txt"
     > "$temp_list"
 
-    # FIXED PATH: Changed subjects/ to students/
     for stu_file in "${students_dir}"/*.stu; do
         [[ -e "$stu_file" ]] || continue
         sid=$(basename "$stu_file" .stu)
@@ -200,7 +193,6 @@ failing_report() {
 
 grade_matrix() {
     echo "--- FULL GRADE MATRIX ---"
-    # Print header
     printf "%-15s" "STUDENT"
     for sub_file in "${subjects_dir}"/*.sub; do
         [[ -e "$sub_file" ]] || continue
