@@ -229,3 +229,67 @@ show_failing_students() {
 
     rm "$temp_list"
 }
+
+get_student_gpa() {
+    local sid=$1
+    total_pts=0
+    total_creds=0
+
+    for grd_file in sgms_data/grades/*.grd; do
+        row=$(grep "^$sid|" "$grd_file")
+        if [[ -n "$row" ]]; then
+            subj=$(basename "$grd_file" .grd)
+            score=$(echo "$row" | cut -d'|' -f2)
+            credits=$(sed -n '3p' "sgms_data/subjects/$subj.sub")
+
+            
+            wp=$(get_weighted_points "$score" "$credits")
+            
+            total_pts=$(awk "BEGIN {print $total_pts + $wp}")
+            total_creds=$((total_creds + credits))
+        fi
+    done
+
+    
+    if [[ $total_creds -gt 0 ]]; then
+        awk "BEGIN {printf \"%.2f\", $total_pts / $total_creds}"
+    else
+        echo "0.00"
+    fi
+}
+
+show_grade_matrix() {
+    echo " GRADE MATRIX "
+
+    
+    printf "%-10s" "STUDENT"  
+    for sub_file in sgms_data/subjects/*.sub; do
+        subj_name=$(basename "$sub_file" .sub)
+        printf "%-10s" "$subj_name" 
+    done
+    printf "%-10s\n" "GPA"  
+    echo "-----------------------------------------------------------------------"
+
+   
+    for stu_file in sgms_data/students/*.stu; do
+        sid=$(basename "$stu_file" .stu)
+        sname=$(sed -n '2p' "$stu_file")
+
+        printf "%-10s" "$sname" 
+
+        
+        for sub_file in sgms_data/subjects/*.sub; do
+            subj_name=$(basename "$sub_file" .sub)
+            score=$(grep "^$sid|" "sgms_data/grades/$subj_name.grd" | cut -d'|' -f2)
+
+            if [[ -n "$score" ]]; then
+                printf "%-10s" "$score" 
+            else
+                printf "%-10s" "-"     
+            fi
+        done
+
+        gpa_val=$(get_student_gpa "$sid")
+        printf "%-10s\n" "$gpa_val" 
+    done
+}
