@@ -286,31 +286,28 @@ view_grades_student(){
         fi
     done 
 
-    echo "---------------------------------------------------------"
-    echo " Grades for Student ID: $student_id"
-    echo "---------------------------------------------------------"
-    echo "Subject Code | Score | Letter Grade"
-    echo "---------------------------------------------------------"
-
-    found_grades=0
-
-    for file in "${grade_dir}"/*; do
+results=$(for file in "${grade_dir}"/*; do
         if [[ -f "$file" ]]; then
+            # Search for the ID
             line=$(grep "^${student_id} |" "$file")
             
             if [[ -n "$line" ]]; then
-                found_grades=1
-                
                 subject_code=$(basename "$file" .grd)
-                
-                score=$(echo "$line" | cut -d'|' -f2)
-                letter=$(echo "$line" | cut -d'|' -f3)
-                echo "$subject_code | $score | $letter"
+                grade_info=$(echo "$line" | cut -d'|' -f2,3)
+                echo "$subject_code |$grade_info"
             fi
         fi
-    done
+    done)
 
-    if [[ $found_grades -eq 0 ]]; then
+    if [[ -z "$results" ]]; then
         echo "No grades recorded for Student $student_id yet."
+    else
+        echo "---------------------------------------------------------"
+        echo " Grades for Student ID: $student_id"
+        echo "---------------------------------------------------------"
+        echo "Subject | Score | Grade"
+        echo "-----------------------"
+        echo "$results"
+        echo "---------------------------------------------------------"
     fi
 }
