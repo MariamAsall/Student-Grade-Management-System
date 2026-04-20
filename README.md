@@ -9,7 +9,6 @@ To support concurrent development without merge conflicts, the source code is di
 ### File Architecture
 ```text
 SGMS/
-├── build.sh             # Compiles development scripts into sgms.sh
 ├── sgms.sh              # The final single executable (Auto-generated)
 ├── .gitignore           # Ignores generated script and local data
 ├── README.md            # Project documentation
@@ -19,7 +18,6 @@ SGMS/
 │   ├── subjects.sh      # Subject CRUD operations
 │   ├── grades.sh        # Grade assignment and management
 │   ├── reports.sh       # GPA calculation and statistics
-│   └── utils.sh         # Shared validation and helper functions
 └── sgms_data/           # Data storage (Auto-created on first run)
 ```
 
@@ -40,12 +38,8 @@ Data is strictly stored using flat files with relative pathing. The system autom
    ```bash
    chmod +x build.sh
    ```
-4. Run the build script to compile the source code into the final executable:
-   ```bash
-   ./build.sh
-   ```
-5. Execute the compiled application:
-   ```bash
+5. Run the sgms script to compile the source code into the final executable:
+  ```bash
    ./sgms.sh
    ```
 
