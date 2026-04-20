@@ -110,7 +110,7 @@ Assign_Grade(){
     done
 
     while true; do 
-        read -p "Enter Subject Name: " subject
+        read -p "Enter Subject Code: " subject
         if [[ -z "$subject" ]]; then
             echo "Subject cannot be empty. Please enter a valid Subject Code."
         elif [[ ! -f "${subjects_dir}/${subject}.sub" ]]; then
