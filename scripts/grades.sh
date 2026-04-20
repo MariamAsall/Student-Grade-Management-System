@@ -38,30 +38,30 @@ grade_menu(){
 
 
 get_letter_grade(){
-    local score=$1
-    awk -v sq="$score" '
+    score=$1
+    awk -v s="$score" '
     BEGIN {
-        if (sq >= 90.0 && sq <= 100.0) 
+        if (s >= 90.0 && s <= 100.0) 
             print "A+"
-        else if (sq >= 85.0 && sq < 90.0) 
+        else if (s >= 85.0 && s < 90.0) 
             print "A"
-        else if (sq >= 80.0 && sq < 85.0) 
+        else if (s >= 80.0 && s < 85.0) 
             print "A-"
-        else if (sq >= 75.0 && sq < 80.0) 
+        else if (s >= 75.0 && s < 80.0) 
             print "B+"
-        else if (sq >= 70.0 && sq < 75.0) 
+        else if (s >= 70.0 && s < 75.0) 
             print "B"
-        else if (sq >= 65.0 && sq < 70.0) 
+        else if (s >= 65.0 && s < 70.0) 
             print "B-"
-        else if (sq >= 60.0 && sq < 65.0) 
+        else if (s >= 60.0 && s < 65.0) 
             print "C+"
-        else if (sq >= 55.0 && sq < 60.0) 
+        else if (s >= 55.0 && s < 60.0) 
             print "C"
-        else if (sq >= 50.0 && sq < 55.0) 
+        else if (s >= 50.0 && s < 55.0) 
             print "C-"
-        else if (sq >= 45.0 && sq < 50.0) 
+        else if (s >= 45.0 && s < 50.0) 
             print "D"
-        else if (sq >= 0.0 && sq < 45.0) 
+        else if (s >= 0.0 && s < 45.0) 
             print "F"
         else 
             print "INVALID"
@@ -69,28 +69,28 @@ get_letter_grade(){
 }
 
 get_gpa_points(){
-    local score=$1
-    awk -v sq="$score" '
+    score=$1
+    awk -v s="$score" '
     BEGIN {
-        if (sq >= 85.0 && sq <= 100.0)
+        if (s >= 85.0 && s <= 100.0)
              print "4.0" 
-        else if (sq >= 80.0 && sq < 85.0) 
+        else if (s >= 80.0 && s < 85.0) 
             print "3.7"
-        else if (sq >= 75.0 && sq < 80.0) 
+        else if (s >= 75.0 && s < 80.0) 
             print "3.3"
-        else if (sq >= 70.0 && sq < 75.0)
+        else if (s >= 70.0 && s < 75.0)
              print "3.0"
-        else if (sq >= 65.0 && sq < 70.0)
+        else if (s >= 65.0 && s < 70.0)
              print "2.7"
-        else if (sq >= 60.0 && sq < 65.0) 
+        else if (s >= 60.0 && s < 65.0) 
             print "2.3"
-        else if (sq >= 55.0 && sq < 60.0) 
+        else if (s >= 55.0 && s < 60.0) 
             print "2.0"
-        else if (sq >= 50.0 && sq < 55.0) 
+        else if (s >= 50.0 && s < 55.0) 
             print "1.7"
-        else if (sq >= 45.0 && sq < 50.0) 
+        else if (s >= 45.0 && s < 50.0) 
             print "1.0"
-        else if (sq >= 0.0 && sq < 45.0) 
+        else if (s >= 0.0 && s < 45.0) 
             print "0.0"
         else 
             print "INVALID"
@@ -98,6 +98,7 @@ get_gpa_points(){
 }
 
 Assign_Grade(){
+    echo "====== Assinging GRADE to STUDENT ======"
     while true; do
         read -p "Enter Student ID: " student_id
         if [[ ! -f "sgms_data/students/${student_id}.stu" ]] ;
@@ -140,4 +141,56 @@ Assign_Grade(){
 
     echo "${student_id} | ${score} | ${letter}" >> "$grades_file"
     echo "Grade $letter ($score) assigned to $student_id for $subject successfully!"
+}
+
+Update_grade(){
+    echo "====== UPDATE EXISTING GRADE ======"
+    while true; do 
+        read -p "Enter the Codeof subject ypu want to update: " subject
+        grades_file=sgms_data/grades/${subject}.grd
+        if [[ ! -f "$grades_file" ]]; then
+            echo "Subject doesnn't exist. Please Try again"
+        else 
+            break 
+        fi
+    done 
+
+    while true; do 
+        read -p "Enter Student ID you want to update its grade: " student_id 
+        line=$(grep "^${student_id} |" "$grades_file")
+        if [[ -z "$line" ]]; then
+            echo "No grade found for Student $student_id in this subject."
+            return
+        else
+            current_score=$(echo "$line" | cut -d'|' -f2)
+            current_grade=$(echo "$line" | cut -d'|' -f3)
+
+            echo "-----------------------------------------------------------"
+            echo "Student Found! Current Score:$current_score" $current_grade
+            echo "------------------------------------------------------------"
+            break 
+        fi
+    done
+
+    while true; do
+        read -p "Enter the new score you want to update: " score 
+        while true; do
+        read -p "Enter grade score (0.0 - 100.0): " score
+        if [[ ! "$score" =~ ^[0-9]+(\.[0-9]+)?$ ]];
+            then 
+            echo "Score is Invalid , must be a numeric between 0.0 and 100 please try again"
+            continue 
+        fi
+
+        letter=$(get_letter_grade "$score")
+        if [[ "$letter" == "INVALID" ]]; then
+            echo "Score must be between 0.0 and 100.0. Please try again."
+        else
+            break
+        fi
+    done 
+
+    sed -i "s/^${student_id} |.*/${student_id} | ${score} | ${letter}/"  "$grades_file"
+    echo "Successfully Grade updated to $letter ($score) for Student $student_id in $subject."
+
 }
