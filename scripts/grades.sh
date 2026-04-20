@@ -1,3 +1,8 @@
+data_dir="sgms_data"
+students_dir="${data_dir}/students"
+subjects_dir="${data_dir}/subjects"
+grade_dir="${data_dir}/grades"
+
 grade_menu(){
     while true ; do 
     echo "GRADE MANAGEMENT MENU"
@@ -38,7 +43,7 @@ grade_menu(){
 
 
 get_letter_grade(){
-    score=$1
+    local score=$1
     awk -v s="$score" '
     BEGIN {
         if (s >= 90.0 && s <= 100.0) 
@@ -69,7 +74,7 @@ get_letter_grade(){
 }
 
 get_gpa_points(){
-    score=$1
+    local score=$1
     awk -v s="$score" '
     BEGIN {
         if (s >= 85.0 && s <= 100.0)
@@ -98,10 +103,10 @@ get_gpa_points(){
 }
 
 Assign_Grade(){
-    echo "====== Assinging GRADE to STUDENT ======"
+    echo "====== Assigning GRADE to STUDENT ======"
     while true; do
         read -p "Enter Student ID: " student_id
-        if [[ ! -f "sgms_data/students/${student_id}.stu" ]] ;
+        if [[ ! -f "${students_dir}/${student_id}.stu" ]] ;
         then 
             echo "This student doesn't exist."
         else
@@ -111,14 +116,14 @@ Assign_Grade(){
 
     while true; do 
         read -p "Enter Subject Name: " subject
-            if [[ ! -f "sgms_data/subjects/${subject}.sub" ]]; then
+            if [[ ! -f "${subjects_dir}/${subject}.sub" ]]; then
                 echo "Subject Not Found! Enter another one."
         else
             break
         fi
     done 
 
-    grades_file="sgms_data/grades/${subject}.grd"
+    grades_file="${grade_dir}/${subject}.grd"
         if [[ -f "$grades_file" ]] && grep -q "^${student_id} |" "$grades_file"; then
             echo "Student already has a grade for this subject."
             return
@@ -146,10 +151,10 @@ Assign_Grade(){
 Update_grade(){
     echo "====== UPDATE EXISTING GRADE ======"
     while true; do 
-        read -p "Enter the Codeof subject ypu want to update: " subject
-        grades_file=sgms_data/grades/${subject}.grd
+        read -p "Enter the Code of subject ypu want to update: " subject
+        grades_file=${grade_dir}/${subject}.grd
         if [[ ! -f "$grades_file" ]]; then
-            echo "Subject doesnn't exist. Please Try again"
+            echo "Subject doesn't exist. Please Try again"
         else 
             break 
         fi
@@ -214,9 +219,78 @@ delete_grade(){
             return
         else
             sed -i "/^${student_id} |/d" "$grades_file"
-            
             echo "Successfully deleted grade for Student $student_id from $subject."
             break 
         fi
     done
+}
+
+view_grades_subject(){
+    echo "====== VIEW GRADES BY SUBJECT ======"
+    while true; do 
+        read -p "Enter Subject Code to view grades: " subject
+        subject=$(echo "$subject" | tr '[:lower:]' '[:upper:]')
+        grades_file="sgms_data/grades/${subject}.grd"
+        
+        if [[ ! -f "$grades_file" ]]; then
+            echo "Error: Subject doesn't exist or has no grades recorded yet."
+            return 
+        else 
+            break 
+        fi
+    done 
+
+    echo "---------------------------------------------------------"
+    echo " Transcript for Subject: $subject"
+    echo "---------------------------------------------------------"
+    echo "Student ID | Score | Letter Grade"
+    echo "---------------------------------------------------------"
+    
+    cat "$grades_file"
+    
+    echo "---------------------------------------------------------"
+    echo "End of records."
+}
+
+view_grades_student(){
+    echo "====== VIEW GRADES BY STUDENT ======"
+    while true; do 
+        read -p "Enter Student ID to view their grades: " student_id 
+        if [[ ! -f "${grade_dir}/${student_id}.stu" ]]; then
+            echo "This student doesn't exist. Please try again."
+            continue
+        else 
+            break 
+        fi
+    done 
+
+    echo "---------------------------------------------------------"
+    echo " Grades for Student ID: $student_id"
+    echo "---------------------------------------------------------"
+    echo "Subject Code | Score | Letter Grade"
+    echo "---------------------------------------------------------"
+
+    found_grades=false
+
+    for file in sgms_data/grades/*.grd; do
+        if [[ -f "$file" ]]; then
+            line=$(grep "^${student_id} |" "$file")
+            
+            if [[ -n "$line" ]]; then
+                found_grades=true
+                
+                subject_code=$(basename "$file" .grd)
+                
+                score=$(echo "$line" | cut -d'|' -f2)
+                letter=$(echo "$line" | cut -d'|' -f3)
+                echo "$subject_code | $score | $letter"
+            fi
+        fi
+    done
+
+    
+    if [[ "$found_grades" == false ]]; then
+        echo "No grades recorded for Student $student_id yet."
+    fi
+
 }

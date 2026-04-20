@@ -1,3 +1,8 @@
+data_dir="sgms_data"
+students_dir="${data_dir}/students"
+subjects_dir="${data_dir}/subjects"
+grade_dir="${data_dir}/grades"
+
 student_menu(){
     while true ; do 
     echo "STUDENT MANAGEMENT MENU"
@@ -41,8 +46,7 @@ add_student(){
     echo "====== ADDING NEW STUDENT ======"
     while true; do 
         read -p "Enter student ID:" student_id
-        filepath="sgms_data/students/${student_id}.stu"
-
+    filepath="${students_dir}/${student_id}.stu"
         if [[ ! $student_id =~ ^[0-9]{1,10}$ ]]
         then 
             echo "Invalid ID , Try again! "
@@ -98,7 +102,7 @@ add_student(){
 
 list_student(){
     echo "====== STUDENTS LIST ======"
-    files=$(ls sgms_data/students/*.stu 2>/dev/null)
+    files=$(ls "${students_dir}"/*.stu 2>/dev/null)
 
     if [[ -z "$files" ]]
     then
@@ -110,8 +114,30 @@ list_student(){
 
 
 search_student(){
+    echo "====== SEARCH STUDENT ======"
+    while true; do
+        read -p "Enter the student's name to search: " search_name
+        
+        if [[ -z "$search_name" ]]; then
+            echo "Search cannot be empty. Please try again."
+            continue
+        else
+            break
+        fi
+    done
 
-
+    echo "--- Search Results ---"
+    
+    for file in $(grep -il "$search_name" "${students_dir}"/*.stu 2>/dev/null); do
+        {
+            read -r id
+            read -r name
+            read -r email
+            read -r year
+        } < "$file"
+        
+        echo "ID: $id | Name: $name | Year: $year | Email: $email"
+    done
 }
 
 
@@ -119,7 +145,7 @@ update_student(){
     echo "====== Updating Students Data ======"
     while true; do
         read -p "Enter student ID you want to Update:" sid
-        filepath="sgms_data/students/${sid}.stu"
+        filepath="${students_dir}/${sid}.stu"
         if [[ -z "$sid" ]]
             then
             echo "ID is empty , please enter an ID" 
@@ -198,7 +224,7 @@ delete_student(){
     echo "====== DELETE STUDENT ======"
     while true; do 
         read -p "Enter Student you want to delete:" std
-        filepath="sgms_data/students/${std}.stu"
+        filepath="${students_dir}/${std}.stu"
 
         if [[ -z "$std" ]]
         then
