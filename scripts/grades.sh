@@ -214,9 +214,12 @@ delete_grade(){
             return
         else
             sed -i "/^${student_id} |/d" "$grades_file"
-            
             echo "Successfully deleted grade for Student $student_id from $subject."
             break 
         fi
     done
+}
+
+view_grades_subject(){
+    
 }
