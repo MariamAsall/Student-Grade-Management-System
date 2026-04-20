@@ -127,6 +127,7 @@ Assign_Grade(){
         if [[ ! "$score" =~ ^[0-9]+(\.[0-9]+)?$ ]];
             then 
             echo "Score is Invalid , must be a numeric between 0.0 and 100 please try again"
+            continue 
         fi
 
         letter=$(get_letter_grade "$score")
