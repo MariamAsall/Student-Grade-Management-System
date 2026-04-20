@@ -96,6 +96,7 @@ list_subjects() {
          
         if [[ -f "$file" ]]; then
             cat "$file"
+            echo "--------------"
         fi
     done
 }
