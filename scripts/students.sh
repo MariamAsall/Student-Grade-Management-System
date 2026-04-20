@@ -1,3 +1,8 @@
+data_dir="sgms_data"
+students_dir="${data_dir}/students"
+subjects_dir="${data_dir}/subjects"
+grade_dir="${dasta_dir}/grades"
+
 student_menu(){
     while true ; do 
     echo "STUDENT MANAGEMENT MENU"
@@ -109,10 +114,36 @@ list_student(){
 }
 
 
-search_student(){
+ssearch_student(){
+    echo "====== SEARCH STUDENT ======"
+    while true; do
+        read -p "Enter the student's name to search: " search_name
+        
+        if [[ -z "$search_name" ]]; then
+            echo "Search cannot be empty. Please try again."
+            continue
+        else
+            break
+        fi
+    done
+    found=false
+    
+    for file in $(grep -il "$search_name" "${STUDENTS_DIR}"/*.stu 2>/dev/null); do
+        {
+            read -r id
+            read -r name
+            read -r email
+            read -r year
+        } < "$file"
+        echo "Found: ID: $id | Name: $name | Year: $year | Email: $email"
+        found=true
+    done
 
-
+    if [[ "$found" == false ]]; then
+        echo "No students found matching '$search_name'."
+    fi
 }
+
 
 
 update_student(){
