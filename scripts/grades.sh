@@ -65,6 +65,7 @@ get_letter_grade() {
             print "INVALID"
     }'
 }
+
 get_gpa_points() {
     echo "$1" | awk '{
         if ($1 >= 85.0 && $1 <= 100.0)
