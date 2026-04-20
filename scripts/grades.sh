@@ -37,60 +37,55 @@ grade_menu(){
 }
 
 
-get_letter_grade(){
-    local score=$1
-    awk -v s="$score" '
-    BEGIN {
-        if (s >= 90.0 && s <= 100.0) 
+get_letter_grade() {
+    echo "$1" | awk '{
+        if ($1 >= 90.0 && $1 <= 100.0) 
             print "A+"
-        else if (s >= 85.0 && s < 90.0) 
+        else if ($1 >= 85.0 && $1 < 90.0) 
             print "A"
-        else if (s >= 80.0 && s < 85.0) 
+        else if ($1 >= 80.0 && $1 < 85.0) 
             print "A-"
-        else if (s >= 75.0 && s < 80.0) 
+        else if ($1 >= 75.0 && $1 < 80.0) 
             print "B+"
-        else if (s >= 70.0 && s < 75.0) 
+        else if ($1 >= 70.0 && $1 < 75.0) 
             print "B"
-        else if (s >= 65.0 && s < 70.0) 
+        else if ($1 >= 65.0 && $1 < 70.0) 
             print "B-"
-        else if (s >= 60.0 && s < 65.0) 
+        else if ($1 >= 60.0 && $1 < 65.0) 
             print "C+"
-        else if (s >= 55.0 && s < 60.0) 
+        else if ($1 >= 55.0 && $1 < 60.0) 
             print "C"
-        else if (s >= 50.0 && s < 55.0) 
+        else if ($1 >= 50.0 && $1 < 55.0) 
             print "C-"
-        else if (s >= 45.0 && s < 50.0) 
+        else if ($1 >= 45.0 && $1 < 50.0) 
             print "D"
-        else if (s >= 0.0 && s < 45.0) 
+        else if ($1 >= 0.0 && $1 < 45.0) 
             print "F"
         else 
             print "INVALID"
     }'
 }
-
-get_gpa_points(){
-    local score=$1
-    awk -v s="$score" '
-    BEGIN {
-        if (s >= 85.0 && s <= 100.0)
+get_gpa_points() {
+    echo "$1" | awk '{
+        if ($1 >= 85.0 && $1 <= 100.0)
              print "4.0" 
-        else if (s >= 80.0 && s < 85.0) 
+        else if ($1 >= 80.0 && $1 < 85.0) 
             print "3.7"
-        else if (s >= 75.0 && s < 80.0) 
+        else if ($1 >= 75.0 && $1 < 80.0) 
             print "3.3"
-        else if (s >= 70.0 && s < 75.0)
+        else if ($1 >= 70.0 && $1 < 75.0)
              print "3.0"
-        else if (s >= 65.0 && s < 70.0)
+        else if ($1 >= 65.0 && $1 < 70.0)
              print "2.7"
-        else if (s >= 60.0 && s < 65.0) 
+        else if ($1 >= 60.0 && $1 < 65.0) 
             print "2.3"
-        else if (s >= 55.0 && s < 60.0) 
+        else if ($1 >= 55.0 && $1 < 60.0) 
             print "2.0"
-        else if (s >= 50.0 && s < 55.0) 
+        else if ($1 >= 50.0 && $1 < 55.0) 
             print "1.7"
-        else if (s >= 45.0 && s < 50.0) 
+        else if ($1 >= 45.0 && $1 < 50.0) 
             print "1.0"
-        else if (s >= 0.0 && s < 45.0) 
+        else if ($1 >= 0.0 && $1 < 45.0) 
             print "0.0"
         else 
             print "INVALID"
