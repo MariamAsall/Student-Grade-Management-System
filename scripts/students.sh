@@ -44,7 +44,7 @@ add_student(){
     filepath="${students_dir}/${student_id}.stu"
         if [[ ! $student_id =~ ^[0-9]{1,10}$ ]]
         then 
-            echo "Invalid ID , Try again! "
+            echo "Invalid ID must be numeric with maximum 10 numbers."
         elif [[ -f "$filepath" ]]
         then
             echo "ID already exist, enter new one"
@@ -58,6 +58,8 @@ add_student(){
         if [[ -z "$name" ]]
         then 
             echo "Name is empty , please enter a name!"
+        elif [[ ! "$name" =~ ^[a-zA-Z\ ]+$ ]]; then 
+            echo "Namecannot contain numbers or special characters. Letters only."
         else 
             break
         fi
