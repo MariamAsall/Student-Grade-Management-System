@@ -3,11 +3,12 @@ student_menu(){
     echo "STUDENT MANAGEMENT MENU"
     echo "  1) Add Student"
     echo "  2) List Student"
-    echo "  3) Update Student"
-    echo "  4) Delete Student"
-    echo "  5) Back to main menu"
+    echo "  3) Search Student "
+    echo "  4) Update Student"
+    echo "  5) Delete Student"
+    echo "  6) Back to main menu"
 
-    read -p "Please choose only NUMBERS from (1-5):" choice 
+    read -p "Please choose only NUMBERS from (1-6):" choice 
 
     case $choice in 
         1)
@@ -15,10 +16,12 @@ student_menu(){
         2)
             list_student;;
         3)
-            update_student;;
+            search_student;;
         4)
-            delete_student;;
+            update_student;;
         5)
+            delete_student;;
+        6)
             echo "Back to the main menu..."
             return
             ;;
@@ -103,6 +106,12 @@ list_student(){
     else
         ls $files
     fi
+}
+
+
+search_student(){
+
+
 }
 
 
@@ -201,6 +210,7 @@ delete_student(){
             break
         else
             echo "No Student Found with this ID."
+            break
         fi
     done
 }
