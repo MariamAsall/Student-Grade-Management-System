@@ -14,16 +14,16 @@ reports_menu() {
 
         case $choice in
             1)
-                show_transcript
+               student_transcript
                 ;;
             2)
-                subject_stats
+                subject_statistics
                 ;;
             3)
                 top_students
                 ;;
             4)
-                failing_report
+                failing_students
                 ;;
             5)
                 grade_matrix
@@ -153,7 +153,7 @@ get_weighted_points() {
     }'
 }
 
-show_top_students() {
+top_students() {
     echo " TOP STUDENTS BY GPA "
     temp_list="sgms_data/temp_ranking.txt"
     > "$temp_list"
@@ -190,7 +190,7 @@ show_top_students() {
     rm "$temp_list"
 }
 
-show_failing_students() {
+failing_students() {
     echo " FAILING STUDENTS REPORT "
     temp_list="sgms_data/failing_temp.txt"
     > "$temp_list"
@@ -258,7 +258,7 @@ get_student_gpa() {
     fi
 }
 
-show_grade_matrix() {
+grade_matrix() {
     echo " GRADE MATRIX "
 
     
