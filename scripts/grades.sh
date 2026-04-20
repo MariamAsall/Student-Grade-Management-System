@@ -1,3 +1,8 @@
+data_dir="sgms_data"
+students_dir="${data_dir}/students"
+subjects_dir="${data_dir}/subjects"
+grade_dir="${data_dir}/grades"
+
 grade_menu(){
     while true ; do 
     echo "GRADE MANAGEMENT MENU"
@@ -101,7 +106,7 @@ Assign_Grade(){
     echo "====== Assigning GRADE to STUDENT ======"
     while true; do
         read -p "Enter Student ID: " student_id
-        if [[ ! -f "sgms_data/students/${student_id}.stu" ]] ;
+        if [[ ! -f "${students_dir}/${student_id}.stu" ]] ;
         then 
             echo "This student doesn't exist."
         else
@@ -111,14 +116,14 @@ Assign_Grade(){
 
     while true; do 
         read -p "Enter Subject Name: " subject
-            if [[ ! -f "sgms_data/subjects/${subject}.sub" ]]; then
+            if [[ ! -f "${subjects_dir}/${subject}.sub" ]]; then
                 echo "Subject Not Found! Enter another one."
         else
             break
         fi
     done 
 
-    grades_file="sgms_data/grades/${subject}.grd"
+    grades_file="${grade_dir}/${subject}.grd"
         if [[ -f "$grades_file" ]] && grep -q "^${student_id} |" "$grades_file"; then
             echo "Student already has a grade for this subject."
             return
@@ -147,7 +152,7 @@ Update_grade(){
     echo "====== UPDATE EXISTING GRADE ======"
     while true; do 
         read -p "Enter the Code of subject ypu want to update: " subject
-        grades_file=sgms_data/grades/${subject}.grd
+        grades_file=${grade_dir}/${subject}.grd
         if [[ ! -f "$grades_file" ]]; then
             echo "Subject doesn't exist. Please Try again"
         else 
@@ -251,7 +256,7 @@ view_grades_student(){
     echo "====== VIEW GRADES BY STUDENT ======"
     while true; do 
         read -p "Enter Student ID to view their grades: " student_id 
-        if [[ ! -f "sgms_data/students/${student_id}.stu" ]]; then
+        if [[ ! -f "${grade_dir}/${student_id}.stu" ]]; then
             echo "This student doesn't exist. Please try again."
             continue
         else 
