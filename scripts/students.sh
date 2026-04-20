@@ -3,11 +3,12 @@ student_menu(){
     echo "STUDENT MANAGEMENT MENU"
     echo "  1) Add Student"
     echo "  2) List Student"
-    echo "  3) Update Student"
-    echo "  4) Delete Student"
-    echo "  5) Back to main menu"
+    echo "  3) Search Student "
+    echo "  4) Update Student"
+    echo "  5) Delete Student"
+    echo "  6) Back to main menu"
 
-    read -p "Please choose only NUMBERS from (1-5):" choice 
+    read -p "Please choose only NUMBERS from (1-6):" choice 
 
     case $choice in 
         1)
@@ -15,10 +16,12 @@ student_menu(){
         2)
             list_student;;
         3)
-            update_student;;
+            search_student;;
         4)
-            delete_student;;
+            update_student;;
         5)
+            delete_student;;
+        6)
             echo "Back to the main menu..."
             return
             ;;
@@ -38,8 +41,7 @@ add_student(){
     echo "====== ADDING NEW STUDENT ======"
     while true; do 
         read -p "Enter student ID:" student_id
-        filepath="sgms_data/students/${student_id}.stu"
-
+    filepath="${students_dir}/${student_id}.stu"
         if [[ ! $student_id =~ ^[0-9]{1,10}$ ]]
         then 
             echo "Invalid ID , Try again! "
@@ -95,7 +97,7 @@ add_student(){
 
 list_student(){
     echo "====== STUDENTS LIST ======"
-    files=$(ls sgms_data/students/*.stu 2>/dev/null)
+    files=$(ls "${students_dir}"/*.stu 2>/dev/null)
 
     if [[ -z "$files" ]]
     then
@@ -106,11 +108,39 @@ list_student(){
 }
 
 
+search_student(){
+    echo "====== SEARCH STUDENT ======"
+    while true; do
+        read -p "Enter the student's name to search: " search_name
+        
+        if [[ -z "$search_name" ]]; then
+            echo "Search cannot be empty. Please try again."
+            continue
+        else
+            break
+        fi
+    done
+
+    echo "--- Search Results ---"
+    
+    for file in $(grep -il "$search_name" "${students_dir}"/*.stu 2>/dev/null); do
+        {
+            read -r id
+            read -r name
+            read -r email
+            read -r year
+        } < "$file"
+        
+        echo "ID: $id | Name: $name | Year: $year | Email: $email"
+    done
+}
+
+
 update_student(){
     echo "====== Updating Students Data ======"
     while true; do
         read -p "Enter student ID you want to Update:" sid
-        filepath="sgms_data/students/${sid}.stu"
+        filepath="${students_dir}/${sid}.stu"
         if [[ -z "$sid" ]]
             then
             echo "ID is empty , please enter an ID" 
@@ -189,7 +219,7 @@ delete_student(){
     echo "====== DELETE STUDENT ======"
     while true; do 
         read -p "Enter Student you want to delete:" std
-        filepath="sgms_data/students/${std}.stu"
+        filepath="${students_dir}/${std}.stu"
 
         if [[ -z "$std" ]]
         then
@@ -201,6 +231,7 @@ delete_student(){
             break
         else
             echo "No Student Found with this ID."
+            break
         fi
     done
 }

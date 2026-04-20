@@ -41,7 +41,6 @@ subject_menu() {
 }
 
 add_subject() {
-    while true; do
       echo "ADD NEW SUBJECT"
       while true; do
         read -p "Enter Subject Code 2-5 letters + 2-4 digits, for examble: CS101, MATH203 " code
@@ -57,7 +56,7 @@ add_subject() {
         fi
 
 
-        if [[ -f "sgms_data/subjects/$code.sub" ]]; then
+        if [[ -f "${subjects_dir}/$code.sub" ]]; then
                 echo "Subject already exists!"
                 continue
         fi
@@ -83,9 +82,9 @@ add_subject() {
         echo "Credits must be a number between 1 and 6"
     done
 
-    echo "$code" > "sgms_data/subjects/$code.sub"
-    echo "$name" >> "sgms_data/subjects/$code.sub"
-    echo "$credits" >> "sgms_data/subjects/$code.sub"
+    echo "$code" > "${subjects_dir}/$code.sub"
+    echo "$name" >> "${subjects_dir}/$code.sub"
+    echo "$credits" >> "${subjects_dir}/$code.sub"
 
     echo "Subject added successfully!"
 }
@@ -93,7 +92,7 @@ add_subject() {
 list_subjects() {
     echo " ALL SUBJECTS "
 
-    for file in sgms_data/subjects/*.sub; do
+    for file in ${subjects_dir}/*.sub; do
          
         if [[ -f "$file" ]]; then
             cat "$file"
@@ -107,7 +106,7 @@ update_subject() {
     
     read -p "the  Code to update: " code
 
-    if [[ ! -f "sgms_data/subjects/$code.sub" ]]; then
+    if [[ ! -f "${subjects_dir}/$code.sub" ]]; then
         echo "Error: Subject $code not found!"
         return 
     fi
@@ -133,9 +132,9 @@ update_subject() {
     done
 
 
-    echo "$code" > "sgms_data/subjects/$code.sub"
-    echo "$new_name" >> "sgms_data/subjects/$code.sub"
-    echo "$new_credits" >> "sgms_data/subjects/$code.sub"
+    echo "$code" > "${subjects_dir}/$code.sub"
+    echo "$new_name" >> "${subjects_dir}/$code.sub"
+    echo "$new_credits" >> "${subjects_dir}/$code.sub"
 
     echo "✔ Subject updated successfully!"
 }
@@ -143,8 +142,8 @@ update_subject() {
 delete_subject() {
     read -p "Enter the Subject Code to delete: " code
 
-    if [[ -f "sgms_data/subjects/$code.sub" ]]; then
-        rm "sgms_data/subjects/$code.sub"
+    if [[ -f "${subjects_dir}/$code.sub" ]]; then
+        rm "${subjects_dir}/$code.sub"
         echo "subject removed successfully"
     else
         echo "subject not found"
