@@ -173,8 +173,6 @@ Update_grade(){
     done
 
     while true; do
-        read -p "Enter the new score you want to update: " score 
-        while true; do
         read -p "Enter grade score (0.0 - 100.0): " score
         if [[ ! "$score" =~ ^[0-9]+(\.[0-9]+)?$ ]];
             then 
