@@ -220,8 +220,7 @@ view_grades_subject(){
     echo "Viewing Grades by Subjects"
     while true; do 
         read -p "Enter Subject Code to view grades: " subject
-        subject=$(echo "$subject" | tr '[:lower:]' '[:upper:]')
-        grades_file=${grade_dir}/${subject}.grd"
+        grades_file="${grade_dir}/${subject}.grd"
         
         if [[ ! -f "$grades_file" ]]; then
             echo "Subject doesn't exist or has no grades yet."
@@ -247,7 +246,7 @@ view_grades_student(){
     echo "Viewing Grades by Students"
     while true; do 
         read -p "Enter Student ID to view their grades: " student_id 
-        if [[ ! -f "${grade_dir}/${student_id}.stu" ]]; then
+        if [[ ! -f "${students_dir}/${student_id}.stu" ]]; then
             echo "This student doesn't exist. Please try again."
             continue
         else 
@@ -261,14 +260,15 @@ view_grades_student(){
     echo "Subject Code | Score | Letter Grade"
     echo "---------------------------------------------------------"
 
-    found_grades=false
+    found_grades=0
 
-    for file in ${grade_dir}"/*; do
+    for file in "${grade_dir}"/*; do
         if [[ -f "$file" ]]; then
             line=$(grep "^${student_id} |" "$file")
             
             if [[ -n "$line" ]]; then
-                found_grades=true
+                # FIXED: Change to 1 when found
+                found_grades=1
                 
                 subject_code=$(basename "$file" .grd)
                 
@@ -279,9 +279,7 @@ view_grades_student(){
         fi
     done
 
-    
-    if [[ "$found_grades" == false ]]; then
+    if [[ $found_grades -eq 0 ]]; then
         echo "No grades recorded for Student $student_id yet."
     fi
-
 }
