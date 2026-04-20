@@ -100,13 +100,10 @@ add_student(){
 
 list_student(){
     echo "Students List: "
-    files=$(ls "${students_dir}"/*.stu 2>/dev/null)
-
-    if [[ -z "$files" ]]
-    then
+    if [ -z "$(ls -A "${students_dir}")" ]; then
         echo "No students to list."
     else
-        ls $files
+        ls "${students_dir}" | cut -d'.' -f1
     fi
 }
 
