@@ -55,9 +55,10 @@ student_transcript() {
     total_credits=0
 
     for file in sgms_data/grades/*.grd; do
-        row=$(grep "^$myid|" "$file")
+        row=$(grep "^$myid |" "$file")
 
         if [[ -n "$row" ]]; then
+         clean_row=$(echo "$row" | tr -d ' ')
         # basename is a built-in Linux command It look at a long file path and delets the folder part so you only see the file name.It sees the slashes / and deletes everything before the last one.
             subj=$(basename "$file" .grd)
             score=$(echo "$row" | cut -d'|' -f2)
@@ -155,10 +156,8 @@ get_weighted_points() {
 
 top_students() {
     echo " TOP STUDENTS BY GPA "
-    temp_list="sgms_data/temp_ranking.txt"
-    > "$temp_list"
-
-    for stu_file in sgms_data/subjects/*.stu; do
+   local temp_list=$(mktemp)
+    for stu_file in sgms_data/students/*.stu; do
         sid=$(basename "$stu_file" .stu)
         name=$(sed -n '2p' "$stu_file")
 
@@ -166,10 +165,10 @@ top_students() {
         total_creds=0
 
         for grd_file in sgms_data/grades/*.grd; do
-            row=$(grep "^$sid|" "$grd_file")
+            row=$(grep "^$sid |" "$grd_file")
             if [[ -n "$row" ]]; then
                 subj=$(basename "$grd_file" .grd)
-                score=$(echo "$row" | cut -d'|' -f2)
+                score=$(echo "$row" | cut -d'|' -f2 | tr -d ' ')
                 credits=$(sed -n '3p' "sgms_data/subjects/$subj.sub")
 
                
@@ -186,15 +185,15 @@ top_students() {
         fi
     done
 
-    sort -rn "$temp_list" | head -n 10
-    rm "$temp_list"
+    
+    sort -t'|' -k1,1rn "$temp_list" | head -n 10
+    rm -f "$temp_list"
 }
 
 failing_students() {
     echo " FAILING STUDENTS REPORT "
-    temp_list="sgms_data/failing_temp.txt"
-    > "$temp_list"
-
+    local temp_list=$(mktemp)
+    
     for stu_file in sgms_data/students/*.stu; do
         sid=$(basename "$stu_file" .stu)
         name=$(sed -n '2p' "$stu_file")
@@ -203,14 +202,14 @@ failing_students() {
         total_creds=0
 
         for grd_file in sgms_data/grades/*.grd; do
-            row=$(grep "^$sid|" "$grd_file")
+            row=$(grep "^$sid |" "$grd_file")
             if [[ -n "$row" ]]; then
                 subj=$(basename "$grd_file" .grd)
-                score=$(echo "$row" | cut -d'|' -f2)
+                score=$(echo "$row" | cut -d'|' -f2 | tr -d ' ')
                 credits=$(sed -n '3p' "sgms_data/subjects/$subj.sub")
 
                 
-                result=$(get_grade_data "$score" "$credits")
+                result=$(get_weighted_points "$score" "$credits")
                 wp=$(echo "$result" | cut -d'|' -f1)
 
                 total_pts=$(awk "BEGIN {print $total_pts + $wp}")
@@ -227,7 +226,7 @@ failing_students() {
     echo "GPA  | NAME (ID)"
     awk -F'|' '$1 < 2.0 {print $0}' "$temp_list" | sort -n
 
-    rm "$temp_list"
+    rm -f "$temp_list"
 }
 
 get_student_gpa() {
@@ -236,10 +235,10 @@ get_student_gpa() {
     total_creds=0
 
     for grd_file in sgms_data/grades/*.grd; do
-        row=$(grep "^$sid|" "$grd_file")
+        row=$(grep "^$sid |" "$grd_file")
         if [[ -n "$row" ]]; then
             subj=$(basename "$grd_file" .grd)
-            score=$(echo "$row" | cut -d'|' -f2)
+            score=$(echo "$row" | cut -d'|' -f2 | tr -d ' ')
             credits=$(sed -n '3p' "sgms_data/subjects/$subj.sub")
 
             
@@ -280,7 +279,7 @@ grade_matrix() {
         
         for sub_file in sgms_data/subjects/*.sub; do
             subj_name=$(basename "$sub_file" .sub)
-            score=$(grep "^$sid|" "sgms_data/grades/$subj_name.grd" | cut -d'|' -f2)
+            score=$(grep "^$sid |" "sgms_data/grades/$subj_name.grd" 2>/dev/null | cut -d'|' -f2 | tr -d ' ')
 
             if [[ -n "$score" ]]; then
                 printf "%-10s" "$score" 
